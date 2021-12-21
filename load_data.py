@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 POSSIBLE_INPUTS = ['all', 'moved_to_0', 'all_without_0s']
 
-def get_data(type = 'all'):
+def get_data(type):
     '''
     type = 'all' or 'moved_to_0' or 'all_without_0s'
     '''
