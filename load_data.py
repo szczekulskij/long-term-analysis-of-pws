@@ -53,7 +53,6 @@ def get_data(format_type):
     else :
         raise Exception(f'Wrong format_type input Jan! You input: {format_type}, but has to be one of {POSSIBLE_INPUTS}')
 
-
 def format_by_moving_to_0(df):
     unique_surnames = set()
     current_decreament = 0
@@ -69,4 +68,6 @@ def format_by_moving_to_0(df):
     return df
 
 def format_by_removing_non_0s(df):
+    df = format_by_moving_to_0(df) # Returns df that has changed visitor_nr to moved_visitor_nr and have old visitor_nr saved as unmoved_visit_nr
+    df = df.loc[df['visit_number'] == df['unmoved_visit_nr']] # Gets rid of all moved rows - aka, all people that didnt start from 0
     return df
