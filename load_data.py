@@ -38,11 +38,11 @@ def get_data(format_type):
             current_summed_clearance = clearance
         summed_clearance.append(current_summed_clearance)
 
-    df['summed_clearance'] = summed_clearance
+    df['total_clearance_summed'] = summed_clearance
 
     #Format column order:
     df['------------'] = ''
-    df = df[['surname', 'time', 'visit_number','clearance_between_visit', 'summed_clearance', '------------', 'total_clearance_between_visit']]
+    df = df[['surname', 'time', 'visit_number','total_clearance_between_visit', 'total_clearance_summed', '------------', 'clearance_between_visit']]
 
     if format_type == 'all':
         return df
