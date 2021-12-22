@@ -4,12 +4,12 @@ import matplotlib.pyplot as plt
 
 POSSIBLE_INPUTS = ['all', 'moved_to_0', 'all_without_0s']
 
-def get_data(type):
+def get_data(format_type):
     '''
-    type = 'all' or 'moved_to_0' or 'all_without_0s'
+    format_type = 'all' or 'moved_to_0' or 'all_without_0s'
     '''
-    if type not in POSSIBLE_INPUTS:
-        raise Exception(f'Wrong type input Jan! You input: {type}, but has to be one of {POSSIBLE_INPUTS}')
+    if format_type not in POSSIBLE_INPUTS:
+        raise Exception(f'Wrong format_type input Jan! You input: {format_type}, but has to be one of {POSSIBLE_INPUTS}')
 
     df = pd.read_csv('12.11 malformacje kapilarne lon.csv')
     # Fill in data to have surnames at each column
@@ -44,14 +44,14 @@ def get_data(type):
     df['------------'] = ''
     df = df[['surname', 'time', 'visit_number','clearance_between_visit', 'summed_clearance', '------------', 'total_clearance_between_visit']]
 
-    if type == 'all':
+    if format_type == 'all':
         return df
-    elif type == 'moved_to_0':
+    elif format_type == 'moved_to_0':
         return format_by_moving_to_0(df)
-    elif type == 'all_without_0s':
+    elif format_type == 'all_without_0s':
         return format_by_removing_non_0s(df)
     else :
-        raise Exception(f'Wrong type input Jan! You input: {type}, but has to be one of {POSSIBLE_INPUTS}')
+        raise Exception(f'Wrong format_type input Jan! You input: {format_type}, but has to be one of {POSSIBLE_INPUTS}')
 
 
 def format_by_moving_to_0(df):
