@@ -55,6 +55,17 @@ def get_data(format_type):
 
 
 def format_by_moving_to_0(df):
+    unique_surnames = set()
+    current_decreament = 0
+    moved_to_0_visit_nr = []
+    for surname, visit_nr in zip(df['surname'], df['visit_number']):
+        if surname not in unique_surnames:
+            unique_surnames.add(surname)
+            current_decreament = visit_nr - 1
+        moved_to_0_visit_nr.append(visit_nr - current_decreament)
+
+    df['unmoved_visit_nr'] = df['visit_number']
+    df['visit_number'] = moved_to_0_visit_nr
     return df
 
 def format_by_removing_non_0s(df):
