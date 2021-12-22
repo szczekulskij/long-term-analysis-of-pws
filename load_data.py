@@ -8,8 +8,6 @@ def get_data(type):
     '''
     type = 'all' or 'moved_to_0' or 'all_without_0s'
     '''
-
-
     if type not in POSSIBLE_INPUTS:
         raise Exception(f'Wrong type input Jan! You input: {type}, but has to be one of {POSSIBLE_INPUTS}')
 
