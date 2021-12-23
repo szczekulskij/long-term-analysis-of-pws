@@ -30,7 +30,7 @@ def get_data(format_type):
     summed_clearance = []
     current_surname = '1.Gasek'
     current_summed_clearance = 0
-    for surname, clearance in zip(df['surname'], df['clearance_between_visit']):
+    for surname, clearance in zip(df['surname'], df['total_clearance_between_visit']):
         if surname == current_surname:
             current_summed_clearance+=clearance
         else:
@@ -41,8 +41,10 @@ def get_data(format_type):
     df['total_clearance_summed'] = summed_clearance
 
     #Format column order:
+    df = get_summed_time_column(df)
+    df = add_grouped_by_time_column(df)
     df['------------'] = ''
-    df = df[['surname', 'time', 'visit_number','total_clearance_between_visit', 'total_clearance_summed', '------------', 'clearance_between_visit']]
+    df = df[['surname', 'time','summed_time','time_group', 'visit_number','total_clearance_between_visit', 'total_clearance_summed', '------------', 'clearance_between_visit']]
 
     if format_type == 'all':
         return df
@@ -70,4 +72,28 @@ def format_by_moving_to_0(df):
 def format_by_removing_non_0s(df):
     df = format_by_moving_to_0(df) # Returns df that has changed visitor_nr to moved_visitor_nr and have old visitor_nr saved as unmoved_visit_nr
     df = df.loc[df['visit_number'] == df['unmoved_visit_nr']] # Gets rid of all moved rows - aka, all people that didnt start from 0
+    return df
+
+def get_summed_time_column(df):
+    summed_time = []
+    current_surname = '1.Gasek'
+    current_summed_time = 0
+    for surname, time in zip(df.surname, df.time):
+        if surname == current_surname:
+            current_summed_time+=time
+        else:
+            current_surname = surname
+            current_summed_time = time
+        summed_time.append(current_summed_time)
+    df['summed_time'] = summed_time
+    return df
+
+
+def add_grouped_by_time_column(df):
+    GROUPS = [0,25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500]
+    labeled_group = []
+    for time in df.time:
+        group = min(GROUPS, key=lambda x:abs(x-time)) // 25
+        labeled_group.append(group)
+    df['time_group'] = labeled_group
     return df
