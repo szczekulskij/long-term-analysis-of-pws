@@ -90,10 +90,11 @@ def get_summed_time_column(df):
 
 
 def add_grouped_by_time_column(df):
-    GROUPS = [0,25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500]
+    # GROUPS = [0,25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500]
+    GROUPS = [0,90,180,270,360]
     labeled_group = []
     for time in df.time:
-        group = min(GROUPS, key=lambda x:abs(x-time)) // 25
+        group = min(GROUPS, key=lambda x:abs(x-time)) // 90
         labeled_group.append(group)
     df['time_group'] = labeled_group
     return df
