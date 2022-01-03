@@ -27,24 +27,12 @@ def get_data(format_type):
                         'total clearence effect miedzy sasiednimi wizytami' : 'total_clearance_between_visit'
                         }, inplace = True)
 
-    summed_clearance = []
-    current_surname = '1.Gasek'
-    current_summed_clearance = 0
-    for surname, clearance in zip(df['surname'], df['total_clearance_between_visit']):
-        if surname == current_surname:
-            current_summed_clearance+=clearance
-        else:
-            current_surname = surname
-            current_summed_clearance = clearance
-        summed_clearance.append(current_summed_clearance)
-
-    df['total_clearance_summed'] = summed_clearance
 
     #Format column order:
     df = get_summed_time_column(df)
     df = add_grouped_by_time_column(df)
     df['------------'] = ''
-    df = df[['surname', 'time','summed_time','time_group', 'visit_number','total_clearance_between_visit', 'total_clearance_summed', '------------', 'clearance_between_visit']]
+    df = df[['surname', 'time','summed_time','time_group', 'visit_number','total_clearance_between_visit', 'clearance_between_visit',  '------------']]
 
     if format_type == 'all':
         return df
