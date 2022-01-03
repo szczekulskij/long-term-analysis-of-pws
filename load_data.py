@@ -2,7 +2,9 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+from utils import add_grouped_by_time_column
 POSSIBLE_INPUTS = ['all', 'moved_to_0', 'all_without_0s']
+DEFAULT_GROUPS = [0,90,180,270,360]
 
 def get_data(format_type):
     '''
@@ -30,8 +32,9 @@ def get_data(format_type):
 
     #Format column order:
     df = get_summed_time_column(df)
-    df = add_grouped_by_time_column(df)
+    df = add_grouped_by_time_column(df, DEFAULT_GROUPS)
     df['------------'] = ''
+    print('default time group has GROUPS defined as:',DEFAULT_GROUPS)
     df = df[['surname', 'time','summed_time','time_group', 'visit_number','total_clearance_between_visit', 'clearance_between_visit',  '------------']]
 
     if format_type == 'all':
@@ -74,15 +77,4 @@ def get_summed_time_column(df):
             current_summed_time = time
         summed_time.append(current_summed_time)
     df['summed_time'] = summed_time
-    return df
-
-
-def add_grouped_by_time_column(df):
-    # GROUPS = [0,25,50,75,100,125,150,175,200,225,250,275,300,325,350,375,400,425,450,475,500]
-    GROUPS = [0,90,180,270,360]
-    labeled_group = []
-    for time in df.time:
-        group = min(GROUPS, key=lambda x:abs(x-time)) // 90
-        labeled_group.append(group)
-    df['time_group'] = labeled_group
     return df
