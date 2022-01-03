@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-DEFAULT_GROUPS = [0,90,180,270,360]
+DEFAULT_GROUPS = [1,90,180,270,360]
 
 
 def add_grouped_by_time_column(df, GROUPS):
