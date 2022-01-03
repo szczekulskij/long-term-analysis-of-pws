@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from utils import add_grouped_by_time_column, DEFAULT_GROUPS
 
 
 def agg_column_graph(df, agg = 'mean', label = '', column = 'clearance_between_visit'):
@@ -13,12 +14,17 @@ def agg_column_graph(df, agg = 'mean', label = '', column = 'clearance_between_v
     plt.axhline(y=0, color='r', linestyle='-')
     
 
-def time_group_based_avg_graph(df, agg = 'mean', label = '', column = 'clearance_between_visit'):
+def time_group_based_avg_graph(df, agg = 'mean', label = '', column = 'clearance_between_visit', default_group = True):
+
+    if not default_group:
+        pass
+
     grouped_by_visit = df.groupby('time_group', as_index = False).agg({'time' : 'mean', 'total_clearance_between_visit' : 'mean', 'clearance_between_visit' : 'mean'}, as_index = False)
-    time = [0] + list(grouped_by_visit['time_group'])
+    time_groups = [0] + list(grouped_by_visit['time_group'])
     summed_clearances = [0] + list(grouped_by_visit[column])
-    plt.plot(time, summed_clearances, label = label)
+    plt.plot(time_groups, summed_clearances, label = label)
     plt.xlabel('visit group')
+    plt.xticks(time_groups, [0] + DEFAULT_GROUPS)
     plt.ylabel('mean poprawa')
     plt.axhline(y=0, color='r', linestyle='-')
 

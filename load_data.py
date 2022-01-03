@@ -1,10 +1,9 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+from utils import add_grouped_by_time_column, DEFAULT_GROUPS
 
-from utils import add_grouped_by_time_column
 POSSIBLE_INPUTS = ['all', 'moved_to_0', 'all_without_0s']
-DEFAULT_GROUPS = [0,90,180,270,360]
 
 def get_data(format_type):
     '''
