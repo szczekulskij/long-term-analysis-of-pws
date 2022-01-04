@@ -17,14 +17,17 @@ def agg_column_graph(df, agg = 'mean', title = '', label = '', column = 'clearan
     plt.legend()
     
 
-def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'clearance_between_visit', GROUPS = [], increment = 0):
+def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'clearance_between_visit', GROUPS = [], increment = 90):
     from utils import DEFAULT_GROUPS
+
     if GROUPS and increment:
         df = add_grouped_by_time_column(df, GROUPS, increment)
         DEFAULT_GROUPS = GROUPS
+    elif GROUPS:
+        raise Exception('You need to input both GROUPS and increment!')
 
 
-    grouped_by_visit = df.groupby('time_group', as_index = False).agg({'time' : 'mean', 'total_clearance_between_visit' : 'mean', 'clearance_between_visit' : 'mean'}, as_index = False)
+    grouped_by_visit = df.groupby('time_group', as_index = False).agg({'time' : agg, 'total_clearance_between_visit' : agg, 'clearance_between_visit' : agg}, as_index = False)
     time_groups = list(grouped_by_visit['time_group'])
     aggregated_column = list(grouped_by_visit[column])
     plt.title(f"sredni zsumowany clearence between visits {title}")
@@ -42,28 +45,38 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     plt.axhline(y=0, color='r', linestyle='-')
     plt.legend()
 
-def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], increment = 0):
-    plt.figure(figsize=(20,10))
 
+    # Return nr of patients_per_bucket
+    grouped_by_visit = df.groupby('time_group', as_index = False)
+    patients_per_bucket = grouped_by_visit['------------'].count()
+    patients_per_bucket.rename(columns = {'------------' : 'patients_in_bucket'}, inplace = True)
+    patients_per_bucket['time_group'] = patients_per_bucket['time_group'] * increment
+    return patients_per_bucket
+
+def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], increment = 90):
+    from utils import DEFAULT_GROUPS
+    from utils import DEFAULT_GROUPS
+    multiple_patients_per_bucket = pd.DataFrame(DEFAULT_GROUPS, columns =['time_group'])
+
+    # TODO - CORRECT NAMING - SO THAT THE COLUMNS ARENT JUST NAMED X AND Y
+
+    plt.figure(figsize=(20,10))
     if not blizsze :
-        time_group_based_avg_graph(df.loc[df.visit_number >= 20], label = 'wizyty 20 i dalsze', GROUPS = GROUPS, increment = increment)
-        time_group_based_avg_graph(df.loc[df.visit_number >= 15], label = 'wizyty 15 i dalsze', GROUPS = GROUPS, increment = increment)
-        time_group_based_avg_graph(df.loc[df.visit_number >= 10], label = 'wizyty 10 i dalsze', GROUPS = GROUPS, increment = increment)
-        time_group_based_avg_graph(df.loc[df.visit_number >= 5], label = 'wizyty 5 i dalsze', GROUPS = GROUPS, increment = increment)
-        time_group_based_avg_graph(df, label = 'wszystkie wizyty', GROUPS = GROUPS, increment = increment)
+        for i in [20,15,10,5,0]:
+            patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number >= i], label = f'wizyty {i} i dalsze', GROUPS = GROUPS, increment = increment)
+            multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group')
         plt.title('wizyty dalsze')
     else :
-        time_group_based_avg_graph(df.loc[df.visit_number <= 20], label = 'wizyty 20 i blizsze', GROUPS = GROUPS, increment = increment)
-        time_group_based_avg_graph(df.loc[df.visit_number <= 15], label = 'wizyty 15 i blizsze', GROUPS = GROUPS, increment = increment)
-        time_group_based_avg_graph(df.loc[df.visit_number <= 10], label = 'wizyty 10 i blizsze', GROUPS = GROUPS, increment = increment)
-        time_group_based_avg_graph(df.loc[df.visit_number <= 5], label = 'wizyty 5 i blizsze', GROUPS = GROUPS, increment = increment)
-        time_group_based_avg_graph(df, label = 'wszystkie wizyty', GROUPS = GROUPS, increment = increment)
+        for i in [20,15,10,5,0]:
+            patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number <= i], label = f'wizyty {i} i blizsze', GROUPS = GROUPS, increment = increment)
+            multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group')
         plt.title('wizyty blizsze')
+    return multiple_patients_per_bucket
 
 
 
 #############################################################################
-############################ LESS USEFUL GRAPHS ############################
+############################ DEPRECATED GRAPHS ############################
 
 def time_based_avg_graph(df, agg = 'mean', label = ''):
     grouped_by_visit = df.groupby('time', as_index = False).agg({'time' : 'mean', 'total_clearance_between_visit' : 'mean', 'clearance_between_visit' : 'mean'}, as_index = False)
