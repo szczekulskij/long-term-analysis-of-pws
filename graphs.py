@@ -49,27 +49,29 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     # Return nr of patients_per_bucket
     grouped_by_visit = df.groupby('time_group', as_index = False)
     patients_per_bucket = grouped_by_visit['------------'].count()
-    patients_per_bucket.rename(columns = {'------------' : 'patients_in_bucket'}, inplace = True)
+    patients_per_bucket.rename(columns = {'------------' : f'patients_in_bucket {label}'}, inplace = True)
     patients_per_bucket['time_group'] = patients_per_bucket['time_group'] * increment
     return patients_per_bucket
 
 def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], increment = 90):
     from utils import DEFAULT_GROUPS
-    from utils import DEFAULT_GROUPS
+    if GROUPS and increment:
+        DEFAULT_GROUPS = GROUPS
     multiple_patients_per_bucket = pd.DataFrame(DEFAULT_GROUPS, columns =['time_group'])
 
-    # TODO - CORRECT NAMING - SO THAT THE COLUMNS ARENT JUST NAMED X AND Y
-
     plt.figure(figsize=(20,10))
+    
     if not blizsze :
-        for i in [20,15,10,5,0]:
+        # for i in [20,15,10,5,0]:
+        for i in [10,5,0]:
             patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number >= i], label = f'wizyty {i} i dalsze', GROUPS = GROUPS, increment = increment)
-            multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group')
+            multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
         plt.title('wizyty dalsze')
     else :
-        for i in [20,15,10,5,0]:
+        # for i in [20,15,10,5,0]:
+        for i in [10,5,0]:
             patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number <= i], label = f'wizyty {i} i blizsze', GROUPS = GROUPS, increment = increment)
-            multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group')
+            multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
         plt.title('wizyty blizsze')
     return multiple_patients_per_bucket
 
