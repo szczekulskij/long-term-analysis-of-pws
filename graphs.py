@@ -77,6 +77,20 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
 
 
 
+
+
+
+def scatter_plot(df, label = ''):
+    x = df['time']
+    x = [min(365,i) for i in x]
+    y = df['clearance_between_visit']
+    plt.scatter(x,y, label = label)
+    plt.axhline(y=0, color='r', linestyle='-')
+    plt.xlabel('time passed (days)')
+    plt.ylabel('clearance between visits')
+
+
+
 #############################################################################
 ############################ DEPRECATED GRAPHS ############################
 
