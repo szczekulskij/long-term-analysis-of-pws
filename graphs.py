@@ -3,13 +3,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 from utils import add_grouped_by_time_column
 from scipy.stats import pearsonr
+from statistical_tests import chi_squared_test
 
 LINEWIDTH = 5
 
 def agg_column_graph(df, agg = 'mean', title = '', label = '', column = 'clearance_between_visit'):
     grouped_by_visit = df.groupby('visit_number', as_index = False).agg({'time' : agg, 'total_clearance_between_visit' : agg, 'clearance_between_visit' : agg}, as_index = False)
     visits = [0] + list(grouped_by_visit['visit_number'])
-    plt.title(f"sredni zsumowany clearence between visits {title}")
+    plt.title(f"sredni mean clearence between visits {title}")
     aggregated_column = [0] + list(grouped_by_visit[column])
     plt.plot(visits, aggregated_column, label = label, linewidth = LINEWIDTH)
     plt.xlabel('visit number')
@@ -18,7 +19,7 @@ def agg_column_graph(df, agg = 'mean', title = '', label = '', column = 'clearan
     plt.legend()
     
 
-def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'clearance_between_visit', GROUPS = [], increment = 90):
+def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'clearance_between_visit', GROUPS = [], increment = 90, display_data_for_chi_square_test = False):
     from utils import DEFAULT_GROUPS
 
     if GROUPS and increment:
@@ -31,7 +32,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     grouped_by_visit = df.groupby('time_group', as_index = False).agg({'time' : agg, 'total_clearance_between_visit' : agg, 'clearance_between_visit' : agg}, as_index = False)
     time_groups = np.array(list(grouped_by_visit['time_group']))
     aggregated_column = list(grouped_by_visit[column])
-    plt.title(f"sredni zsumowany clearence between visits {title}")
+    plt.title(f"sredni mean clearence between visits {title}")
     plt.plot(time_groups, aggregated_column, label = label, linewidth = LINEWIDTH)
     plt.xlabel('czas uplyniety (pogrupowany!)')
     try:
@@ -49,7 +50,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     plt.plot(time_groups, m*time_groups + b, '--', linewidth = 2, linestyle = '--')
     # calculate the Pearson's correlation between two variables
     corr, _ = pearsonr(time_groups, aggregated_column)
-    print('Pearsons correlation: %.3f' % corr)
+    print(f'Pearsons correlation of the linear fit for {label}: %.3f' % corr, '(very bad practice though)')
 
 
 
@@ -63,6 +64,11 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     patients_per_bucket = grouped_by_visit['------------'].count()
     patients_per_bucket.rename(columns = {'------------' : f'patients_in_bucket {label}'}, inplace = True)
     patients_per_bucket['time_group'] = patients_per_bucket['time_group'] * increment
+
+    # chi squared contigency test
+    chi_squared_test(df, GROUPS, increment, display_data_for_chi_square_test, name = label)
+    print()
+
     return patients_per_bucket
 
 def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], increment = 90):
