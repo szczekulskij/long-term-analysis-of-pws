@@ -76,6 +76,20 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
     return multiple_patients_per_bucket
 
 
+def scatter_plot(df, label = '', label2 = ''):
+    x = df['time']
+    y = df['clearance_between_visit']
+    m, b = np.polyfit(x, y, 1)
+    x = [min(365,i) for i in x]
+    plt.scatter(x,y, label = label)
+    plt.axhline(y=0, color='r', linestyle='-')
+    plt.xlabel('time passed (days)')
+    plt.ylabel('clearance between visits')
+    x = np.array(x)
+    m, b = np.polyfit(x, y, 1)
+    plt.plot(x, m*x + b, '--', linewidth = 1, linestyle = '--', label = label2)
+
+
 
 
 
