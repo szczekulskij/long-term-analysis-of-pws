@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from utils import add_grouped_by_time_column
+from scipy.stats import pearsonr
 
 LINEWIDTH = 5
 
@@ -28,7 +29,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
 
 
     grouped_by_visit = df.groupby('time_group', as_index = False).agg({'time' : agg, 'total_clearance_between_visit' : agg, 'clearance_between_visit' : agg}, as_index = False)
-    time_groups = list(grouped_by_visit['time_group'])
+    time_groups = np.array(list(grouped_by_visit['time_group']))
     aggregated_column = list(grouped_by_visit[column])
     plt.title(f"sredni zsumowany clearence between visits {title}")
     plt.plot(time_groups, aggregated_column, label = label, linewidth = LINEWIDTH)
@@ -40,6 +41,17 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
         for index in time_groups:
             NEW_DEFAULT_GROUPS.append(DEFAULT_GROUPS[index])
         plt.xticks(time_groups, NEW_DEFAULT_GROUPS)
+
+    # Get lineary fit graph:
+    # x = np.array(time_groups)
+    # y = aggregated_column
+    m, b = np.polyfit(time_groups, aggregated_column, 1)
+    plt.plot(time_groups, m*time_groups + b, '--', linewidth = 1, linestyle = '--')
+    # calculate the Pearson's correlation between two variables
+    corr, _ = pearsonr(time_groups, aggregated_column)
+    print('Pearsons correlation: %.3f' % corr)
+
+
 
     plt.ylabel(f'{agg} {column}')
     plt.axhline(y=0, color='r', linestyle='-')
@@ -88,6 +100,9 @@ def scatter_plot(df, label = '', label2 = ''):
     x = np.array(x)
     m, b = np.polyfit(x, y, 1)
     plt.plot(x, m*x + b, '--', linewidth = 1, linestyle = '--', label = label2)
+    # calculate the Pearson's correlation between two variables
+    corr, _ = pearsonr(x, y)
+    print('Pearsons correlation: %.3f' % corr)
 
 
 
