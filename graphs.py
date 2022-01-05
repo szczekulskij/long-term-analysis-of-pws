@@ -46,7 +46,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     # x = np.array(time_groups)
     # y = aggregated_column
     m, b = np.polyfit(time_groups, aggregated_column, 1)
-    plt.plot(time_groups, m*time_groups + b, '--', linewidth = 1, linestyle = '--')
+    plt.plot(time_groups, m*time_groups + b, '--', linewidth = 2, linestyle = '--')
     # calculate the Pearson's correlation between two variables
     corr, _ = pearsonr(time_groups, aggregated_column)
     print('Pearsons correlation: %.3f' % corr)
@@ -88,7 +88,7 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
     return multiple_patients_per_bucket
 
 
-def scatter_plot(df, label = '', label2 = ''):
+def scatter_plot(df, label = '', label2 = '', plot_linear_fit = True):
     x = df['time']
     y = df['clearance_between_visit']
     m, b = np.polyfit(x, y, 1)
@@ -99,10 +99,11 @@ def scatter_plot(df, label = '', label2 = ''):
     plt.ylabel('clearance between visits')
     x = np.array(x)
     m, b = np.polyfit(x, y, 1)
-    plt.plot(x, m*x + b, '--', linewidth = 1, linestyle = '--', label = label2)
-    # calculate the Pearson's correlation between two variables
-    corr, _ = pearsonr(x, y)
-    print('Pearsons correlation: %.3f' % corr)
+    if plot_linear_fit:
+        plt.plot(x, m*x + b, '--', linewidth = 2, linestyle = '--', label = label2)
+        # calculate the Pearson's correlation between two variables
+        corr, _ = pearsonr(x, y)
+        print('Pearsons correlation: %.3f' % corr)
 
 
 
