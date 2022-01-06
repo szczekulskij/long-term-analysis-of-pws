@@ -1,3 +1,4 @@
+from numpy.lib.function_base import disp
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -94,7 +95,7 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
     return multiple_patients_per_bucket
 
 
-def scatter_plot(df, label = '', label2 = '', plot_linear_fit = True):
+def scatter_plot_against_time(df, label = '', label2 = '', plot_linear_fit = True):
     x = df['time']
     y = df['clearance_between_visit']
     m, b = np.polyfit(x, y, 1)
@@ -111,7 +112,36 @@ def scatter_plot(df, label = '', label2 = '', plot_linear_fit = True):
         corr, _ = pearsonr(x, y)
         print('Pearsons correlation: %.3f' % corr)
 
+def scatter_plot_against_visit_nr(df, label = '', label2 = '', plot_linear_fit = True, plot_type = 'scatter'):
+    if plot_type =='scatter':
+        x = np.array(df['visit_number'])
+        y = np.array(df['clearance_between_visit'])
+        m, b = np.polyfit(x, y, 1)
+        plt.scatter(x,y, label = label)
+        if plot_linear_fit:
+            # Linear fit to all points
+            plt.plot(x, m*x + b, '--', linewidth = 2, linestyle = '--', label = label2)
+            corr, _ = pearsonr(x, y)
+            print('Pearsons correlation: %.3f' % corr)
 
+
+    elif plot_type == 'box':
+        df[['visit_number', 'clearance_between_visit']].boxplot(by = 'visit_number',  figsize = [20,10])
+        display_df = df.groupby('visit_number').count()[['clearance_between_visit']].rename(columns = {'clearance_between_visit' : 'count'})
+        
+        if plot_linear_fit:
+            # Linear fit to mean
+            linear_fit_df = df.groupby('visit_number', as_index = False).agg({'clearance_between_visit':'mean'})[['clearance_between_visit','visit_number']]
+            x = linear_fit_df['visit_number']
+            y = linear_fit_df['clearance_between_visit']
+            m, b = np.polyfit(x, y, 1)
+            plt.plot(x, m*x + b, '--', linewidth = 2, linestyle = '--', label = label2)
+            plt.xlim(0, 25)
+            corr, _ = pearsonr(x, y)
+            print('Pearsons correlation: %.3f' % corr)
+    plt.axhline(y=0, color='r', linestyle='-')
+    plt.xlabel('visit nr')
+    plt.ylabel('clearance between visits')
 
 
 
