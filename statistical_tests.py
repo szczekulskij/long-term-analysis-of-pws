@@ -4,6 +4,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from utils import add_grouped_by_time_column
 from scipy.stats import pearsonr
+from scipy.stats import ttest_rel as ttest_related
+from scipy.stats import ttest_ind as ttest_not_related
+
 
 
 
@@ -34,19 +37,23 @@ def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name
         print('expected frequencies were:')
         display(pd.DataFrame(ex, index= ['False', 'True']))
 
+
+
+
+
 def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, related_ttest = True):
-    df = df[['visit_number', 'clearance_between_visit', 'time', 'visit_number']]
+    df = df[['visit_number', 'clearance_between_visit', 'time']]
+
     if time_threshold and not visit_nr_threshold:
         THRESHOLD_VAR = 'time'
         THRESHOLD = time_threshold
-        print('using time (days) threshold')
+        print(f'\ntest for days passsed: {THRESHOLD}')
     elif visit_nr_threshold and not time_threshold:
         THRESHOLD_VAR = 'visit_number'
         THRESHOLD = visit_nr_threshold
-        print('using visit nr threshold')
+        print(f'\ntest for nr visits: {THRESHOLD}')
     else : 
         raise Exception('need to divide into left and right using one of the thresholds! (and only one !)')
-
 
     left_data = df.loc[df[THRESHOLD_VAR] <= THRESHOLD]['clearance_between_visit']
     right_data = df.loc[df[THRESHOLD_VAR] > THRESHOLD]['clearance_between_visit']
@@ -59,4 +66,4 @@ def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, re
 
     print('left mean:', round(left_data.mean(),3))
     print('right mean:', round(right_data.mean(),3))
-    print('p_value:', p_value)
+    print('p_value:', round(p_value,4))
