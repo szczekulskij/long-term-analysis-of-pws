@@ -82,13 +82,13 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
     
     if not blizsze :
         # for i in [20,15,10,5,0]:
-        for i in [10,5,0]:
+        for i in [10,5,3, 0]:
             patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number >= i], label = f'wizyty {i} i dalsze', GROUPS = GROUPS, increment = increment)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
         plt.title('wizyty dalsze')
     else :
         # for i in [20,15,10,5,0]:
-        for i in [10,5,0]:
+        for i in [10,5,3,0]:
             patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number <= i], label = f'wizyty {i} i blizsze', GROUPS = GROUPS, increment = increment)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
         plt.title('wizyty blizsze')
