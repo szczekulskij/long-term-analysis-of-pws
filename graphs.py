@@ -2,7 +2,7 @@ from numpy.lib.function_base import disp
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import add_grouped_by_time_column
+from utils import add_grouped_by_time_column, add_grouped_by_nr_visit_column
 from scipy.stats import pearsonr
 from statistical_tests import chi_squared_test
 
@@ -20,18 +20,23 @@ def agg_column_graph(df, agg = 'mean', title = '', label = '', column = 'clearan
     plt.legend()
     
 
-def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'clearance_between_visit', GROUPS = [], increment = 90, display_data_for_chi_square_test = False):
+def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'clearance_between_visit', GROUPS = [], increment = 90, display_data_for_chi_square_test = False, base_column = 'time_group'):
     from utils import DEFAULT_GROUPS
+    if base_column not in ['nr_visit_group', 'time_group']:
+        raise Exception('base_column has to be one of the following:', ['nr_visit_group', 'time_group'])
 
     if GROUPS and increment:
-        df = add_grouped_by_time_column(df, GROUPS, increment)
+        if base_column == 'time_group':
+            df = add_grouped_by_time_column(df, GROUPS, increment)
+        elif base_column == 'nr_visit_group':
+            df = add_grouped_by_nr_visit_column(df, GROUPS, increment)
         DEFAULT_GROUPS = GROUPS
     elif GROUPS:
         raise Exception('You need to input both GROUPS and increment!')
 
 
-    grouped_by_visit = df.groupby('time_group', as_index = False).agg({'time' : agg, 'total_clearance_between_visit' : agg, 'clearance_between_visit' : agg}, as_index = False)
-    time_groups = np.array(list(grouped_by_visit['time_group']))
+    grouped_by_visit = df.groupby(base_column, as_index = False).agg({'time' : agg, 'total_clearance_between_visit' : agg, 'clearance_between_visit' : agg}, as_index = False)
+    time_groups = np.array(list(grouped_by_visit[base_column]))
     aggregated_column = list(grouped_by_visit[column])
     plt.title(f"sredni mean clearence between visits {title}")
     plt.plot(time_groups, aggregated_column, label = label, linewidth = LINEWIDTH)
@@ -61,13 +66,13 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
 
 
     # Return nr of patients_per_bucket
-    grouped_by_visit = df.groupby('time_group', as_index = False)
+    grouped_by_visit = df.groupby(base_column, as_index = False)
     patients_per_bucket = grouped_by_visit['------------'].count()
     patients_per_bucket.rename(columns = {'------------' : f'patients_in_bucket {label}'}, inplace = True)
-    patients_per_bucket['time_group'] = patients_per_bucket['time_group'] * increment
+    patients_per_bucket[base_column] = patients_per_bucket[base_column] * increment
 
     # chi squared contigency test
-    chi_squared_test(df, GROUPS, increment, display_data_for_chi_square_test, name = label)
+    chi_squared_test(df, GROUPS, increment, display_data_for_chi_square_test, name = label, column_name = base_column)
     print()
 
     return patients_per_bucket

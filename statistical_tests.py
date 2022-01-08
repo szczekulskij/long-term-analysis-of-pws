@@ -10,7 +10,7 @@ from scipy.stats import ttest_ind as ttest_not_related
 
 
 
-def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name = ''):
+def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name = '', column_name = 'time_group'):
     from utils import DEFAULT_GROUPS
     if GROUPS and increment:
         df = add_grouped_by_time_column(df, GROUPS, increment)
@@ -21,9 +21,9 @@ def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name
     if display_data:
         display(df.head(5))
 
-    data = df.groupby(by = ['below 0', 'time_group'], as_index = False).count()
-    data = data[['below 0', 'time_group', 'surname']].rename(columns = {'surname' : 'count'})
-    data = data.pivot(index = 'below 0', columns = 'time_group', values = 'count')
+    data = df.groupby(by = ['below 0', column_name], as_index = False).count()
+    data = data[['below 0', column_name, 'surname']].rename(columns = {'surname' : 'count'})
+    data = data.pivot(index = 'below 0', columns = column_name, values = 'count')
     if display_data:
         print('GROUPS:', DEFAULT_GROUPS)
         display(data)
