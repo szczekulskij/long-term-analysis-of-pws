@@ -6,8 +6,65 @@ from utils import add_grouped_by_time_column
 from scipy.stats import pearsonr
 from scipy.stats import ttest_rel as ttest_related
 from scipy.stats import ttest_ind as ttest_not_related
+from load_data import get_data
 
+def get_stats_for_abstract(df = None, format_type = None):
 
+    if df and not format_type:
+        df = df
+        print('REMEMBER TO NOT REMOVE 0S!, call format_type instead - it wont remove 0s!')
+    elif not df and format_type:
+        df = get_data(format_type, remove_minus_ones = False)
+
+    data = df.groupby(by  = 'surname', as_index = False).agg({'total_clearence_effect_wzgledem_poczatku' : 'max'})
+    all_patients = len(data)
+
+    x = data.total_clearence_effect_wzgledem_poczatku.median()
+    print('median of maximum total clearence:', x)
+
+    x = len(data.loc[data['total_clearence_effect_wzgledem_poczatku'] >=25] )
+    x = x / all_patients * 100 
+    print('% of patients that had a total_clearence of minimum 25%:', x)
+
+    x = len(data.loc[data['total_clearence_effect_wzgledem_poczatku'] >=50] )
+    x = x / all_patients * 100 
+    print('% of patients that had a total_clearence of minimum 50%:', x)
+
+    x = len(data.loc[data['total_clearence_effect_wzgledem_poczatku'] >=75] )
+    x = x / all_patients * 100 
+    print('% of patients that had a total_clearence of minimum 75%:', x)
+
+    x = len(data.loc[data['total_clearence_effect_wzgledem_poczatku'] >=90] )
+    x = x / all_patients * 100 
+    print('% of patients that had a total_clearence of minimum 90%:', x)
+
+    return data
+
+def get_stats_for_abstract2(df = None, format_type = None, visit_number_buckets = 0):
+
+    if df and not format_type:
+        df = df
+        print('REMEMBER TO NOT REMOVE 0S!, call format_type instead - it wont remove 0s!')
+    elif not df and format_type:
+        df = get_data(format_type, remove_minus_ones = False)
+
+    if visit_number_buckets == 0 :
+        raise Exception('something went wrong')
+
+    maxes = []
+    for next_bucket in visit_number_buckets:
+        if next_bucket == 0:
+            previous_bucket = 0
+            continue
+        print('bucket:', next_bucket)
+        data = df.loc[(df['visit_number'] <= next_bucket )]
+        data = data.groupby(by  = 'surname', as_index = False).agg({'total_clearence_effect_wzgledem_poczatku' : 'max'})
+        max_total_clearaence = data.total_clearence_effect_wzgledem_poczatku.median()
+        maxes.append(max_total_clearaence)
+        previous_bucket = next_bucket
+
+    print(maxes)
+    return data
 
 
 def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name = '', column_name = 'time_group'):
@@ -17,7 +74,7 @@ def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name
         DEFAULT_GROUPS = GROUPS
     
     # chi squared data
-    df['below 0'] = df.apply(lambda row: False if row['clearance_between_visit'] > 0 else True, axis = 1 )
+    df['below 0'] = df.apply(lambda row: False if row['total_clearance_effect_between_visit'] > 0 else True, axis = 1 )
     if display_data:
         display(df.head(5))
 
@@ -42,7 +99,7 @@ def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name
 
 
 def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, related_ttest = True):
-    df = df[['visit_number', 'clearance_between_visit', 'time']]
+    df = df[['visit_number', 'total_clearance_effect_between_visit', 'time']]
 
     if time_threshold and not visit_nr_threshold:
         THRESHOLD_VAR = 'time'
@@ -55,8 +112,8 @@ def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, re
     else : 
         raise Exception('need to divide into left and right using one of the thresholds! (and only one !)')
 
-    left_data = df.loc[df[THRESHOLD_VAR] <= THRESHOLD]['clearance_between_visit']
-    right_data = df.loc[df[THRESHOLD_VAR] > THRESHOLD]['clearance_between_visit']
+    left_data = df.loc[df[THRESHOLD_VAR] <= THRESHOLD]['total_clearance_effect_between_visit']
+    right_data = df.loc[df[THRESHOLD_VAR] > THRESHOLD]['total_clearance_effect_between_visit']
 
 
     if related_ttest:

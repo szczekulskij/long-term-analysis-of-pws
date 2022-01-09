@@ -5,14 +5,17 @@ from utils import add_grouped_by_time_column, DEFAULT_GROUPS
 
 POSSIBLE_INPUTS = ['all', 'moved_to_0', 'all_without_0s']
 
-def get_data(format_type):
+def get_data(format_type, remove_minus_ones = True):
+
     '''
     format_type = 'all' or 'moved_to_0' or 'all_without_0s'
     '''
     if format_type not in POSSIBLE_INPUTS:
         raise Exception(f'Wrong format_type input Jan! You input: {format_type}, but has to be one of {POSSIBLE_INPUTS}')
 
-    df = pd.read_csv('12.11 malformacje kapilarne lon.csv')
+    # df = pd.read_csv('12.11 malformacje kapilarne lon.csv')
+    df = pd.read_csv('nowe_poprawione_dane.csv')
+
     # Fill in data to have surnames at each column
     new_nazwisko = []
     current_surname = ''
@@ -22,10 +25,10 @@ def get_data(format_type):
         new_nazwisko.append(current_surname)
     df['nazwisko'] = new_nazwisko
     df.rename(columns = {'wizyta po ilu zabiegach' : 'visit_number',
-                        'poprawa' : 'clearance_between_visit',
+                        'total clearence pomiedzy wizytami' : 'total_clearance_effect_between_visit',
                         'czas ' : 'time',
                         'nazwisko' : 'surname',
-                        'total clearence effect miedzy sasiednimi wizytami' : 'total_clearance_between_visit'
+                        'total clearence effect wzgledem poczatku' : 'total_clearence_effect_wzgledem_poczatku'
                         }, inplace = True)
 
 
@@ -34,7 +37,10 @@ def get_data(format_type):
     df = add_grouped_by_time_column(df, DEFAULT_GROUPS)
     df['------------'] = ''
     print('default time group has GROUPS defined as:',DEFAULT_GROUPS)
-    df = df[['surname', 'time','summed_time','time_group', 'visit_number','total_clearance_between_visit', 'clearance_between_visit',  '------------']]
+    df = df[['surname', 'time','summed_time','time_group', 'visit_number','total_clearance_effect_between_visit', 'total_clearence_effect_wzgledem_poczatku',  '------------']]
+
+    if remove_minus_ones:
+        df = df.loc[df['total_clearance_effect_between_visit'] != -1]
 
     if format_type == 'all':
         return df
