@@ -117,9 +117,9 @@ def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, re
 
 
     if related_ttest:
-        staistics, p_value = ttest_related(left_data, right_data, alternative = 'greater')
+        statistics, p_value = ttest_related(left_data, right_data, alternative = 'greater')
     else :
-        staistics, p_value = ttest_not_related(left_data, right_data, alternative = 'greater')
+        statistics, p_value = ttest_not_related(left_data, right_data, alternative = 'greater')
 
     print('left mean:', round(left_data.mean(),3))
     print('right mean:', round(right_data.mean(),3))
