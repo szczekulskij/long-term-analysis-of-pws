@@ -14,7 +14,14 @@ def get_data(format_type, remove_minus_ones = True):
         raise Exception(f'Wrong format_type input Jan! You input: {format_type}, but has to be one of {POSSIBLE_INPUTS}')
 
     # df = pd.read_csv('12.11 malformacje kapilarne lon.csv')
-    df = pd.read_csv('nowe_poprawione_dane.csv')
+    try : 
+        df = pd.read_csv('nowe_poprawione_dane.csv') 
+    except : 
+        try : 
+            df = pd.read_csv('src/nowe_poprawione_dane.csv') 
+        except :
+            raise Exception('Data reading went wrong! Fix it !')
+
 
     # Fill in data to have surnames at each column
     new_nazwisko = []

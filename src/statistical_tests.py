@@ -12,7 +12,7 @@ def get_stats_for_abstract(df = None, format_type = None):
 
     if df and not format_type:
         df = df
-        print('REMEMBER TO NOT REMOVE 0S!, call format_type instead - it wont remove 0s!')
+        print('REMEMBER TO NOT REMOVE -1S!, call format_type instead - it wont remove 0s!')
     elif not df and format_type:
         df = get_data(format_type, remove_minus_ones = False)
 
