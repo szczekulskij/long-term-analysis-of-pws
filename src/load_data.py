@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import add_grouped_by_time_column, DEFAULT_GROUPS
+from src.utils import add_grouped_by_time_column, DEFAULT_GROUPS
 
 POSSIBLE_INPUTS = ['all', 'moved_to_0', 'all_without_0s']
 

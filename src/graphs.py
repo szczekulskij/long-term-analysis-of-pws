@@ -2,9 +2,9 @@ from numpy.lib.function_base import disp
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import add_grouped_by_time_column, add_grouped_by_nr_visit_column
+from src.utils import add_grouped_by_time_column, add_grouped_by_nr_visit_column
 from scipy.stats import pearsonr
-from statistical_tests import chi_squared_test
+from src.statistical_tests import chi_squared_test
 
 LINEWIDTH = 5
 
@@ -21,7 +21,7 @@ def agg_column_graph(df, agg = 'mean', title = '', label = '', column = 'total_c
     
 
 def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearance_effect_between_visit', GROUPS = [], increment = 90, display_data_for_chi_square_test = False, base_column = 'time_group'):
-    from utils import DEFAULT_GROUPS
+    from src.utils import DEFAULT_GROUPS
     if base_column not in ['nr_visit_group', 'time_group']:
         raise Exception('base_column has to be one of the following:', ['nr_visit_group', 'time_group'])
 
@@ -78,7 +78,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     return patients_per_bucket
 
 def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], increment = 90):
-    from utils import DEFAULT_GROUPS
+    from src.utils import DEFAULT_GROUPS
     if GROUPS and increment:
         DEFAULT_GROUPS = GROUPS
     multiple_patients_per_bucket = pd.DataFrame(DEFAULT_GROUPS, columns =['time_group'])

@@ -2,11 +2,11 @@ from scipy.stats import chi2_contingency
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from utils import add_grouped_by_time_column
+from src.utils import add_grouped_by_time_column
 from scipy.stats import pearsonr
 from scipy.stats import ttest_rel as ttest_related
 from scipy.stats import ttest_ind as ttest_not_related
-from load_data import get_data
+from src.load_data import get_data
 
 def get_stats_for_abstract(df = None, format_type = None):
 
@@ -68,7 +68,7 @@ def get_stats_for_abstract2(df = None, format_type = None, visit_number_buckets 
 
 
 def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name = '', column_name = 'time_group'):
-    from utils import DEFAULT_GROUPS
+    from src.utils import DEFAULT_GROUPS
     if GROUPS and increment:
         df = add_grouped_by_time_column(df, GROUPS, increment)
         DEFAULT_GROUPS = GROUPS
