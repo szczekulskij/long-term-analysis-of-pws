@@ -50,13 +50,20 @@ def get_data(format_type, remove_minus_ones = True):
         df = df.loc[df['total_clearance_effect_between_visit'] != -1]
 
     if format_type == 'all':
-        return df
+        pass
+
     elif format_type == 'moved_to_0':
-        return format_by_moving_to_0(df)
+        df = format_by_moving_to_0(df)
+
     elif format_type == 'all_without_0s':
-        return format_by_removing_non_0s(df)
+        df = format_by_removing_non_0s(df)
+        
     else :
         raise Exception(f'Wrong format_type input Jan! You input: {format_type}, but has to be one of {POSSIBLE_INPUTS}')
+
+    df = df.reset_index(drop=True)
+    return df
+
 
 def format_by_moving_to_0(df):
     unique_surnames = set()
