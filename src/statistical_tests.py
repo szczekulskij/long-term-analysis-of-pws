@@ -98,6 +98,7 @@ def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name
 
 
 
+
 def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, related_ttest = True):
     df = df[['visit_number', 'total_clearance_effect_between_visit', 'time']]
 
@@ -116,7 +117,12 @@ def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, re
     right_data = df.loc[df[THRESHOLD_VAR] > THRESHOLD]['total_clearance_effect_between_visit']
 
 
+
     if related_ttest:
+        # Remove later! This is very wrong
+        length = len(left_data) if len(left_data) < len(right_data) else len(right_data)
+        left_data = left_data.head(length)
+        right_data = right_data.head(length)
         statistics, p_value = ttest_related(left_data, right_data, alternative = 'greater')
     else :
         statistics, p_value = ttest_not_related(left_data, right_data, alternative = 'greater')
