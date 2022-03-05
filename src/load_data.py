@@ -8,39 +8,67 @@ POSSIBLE_INPUTS = ['all', 'moved_to_0', 'all_without_0s']
 def get_data(format_type, remove_minus_ones = True):
 
     '''
-    format_type = 'all' or 'moved_to_0' or 'all_without_0s'
-    '''
-    if format_type not in POSSIBLE_INPUTS:
-        raise Exception(f'Wrong format_type input Jan! You input: {format_type}, but has to be one of {POSSIBLE_INPUTS}')
+    This functions reads the data from csv files and transforms it accordingly. (have a look at data.csv file)
 
-    # df = pd.read_csv('12.11 malformacje kapilarne lon.csv')
+    The data in csv file is in form one visit per row
+    The data in csv file has holes in it. Aka - we might not have first few visits, or we might not have few visits in between.
+
+    For every visit we could calculate healing in respect to beginning (called total_clearence_in_respect_to_beginning)
+    Only when we have 2 visits in the row, can we calculate healing in respect to previous visit (called total_clearence_in_between_visits), 
+    Therefore when unable to calculate total_clearence_in_between_visits - instead of empty space, I've put a -1 there.
+
+
+    Parameters
+    ---------------------------------------------------
+    format_type: str
+        'all' - no changes to data
+        'moved_to_0' - move visit_nr of people who didn't have first few visits (Bad practice. Used due to lack of data)
+        'all_without_0s' - remove visitors who didn't have the first visit
+        
+
+    remove_minus_ones: bool
+        Remove visits that didn't have total_clearence_in_between_visits (so they had -1 in place of total_clearence_in_between_visits)
+        
+
+    Returns
+    ---------------------------------------------------    
+    return pd.DataFrame w. visits data
+        Each row represents one medical visit which aim was to heal the birth scar (port-wine stain)
+        Each row has a data on:
+            * surname - surname of patient & nr of patient (ex. 4.Ball)
+            * total_clearence_in_between_visits - How sucessful was healing compared to previous visit (in %)
+            * total_clearence_in_respect_to_beginning - How sucessful was healing compared to very beginning, before any visits  (in %)
+            * time - How many days passed since last visit 
+            * visir_number - visit number
+
+    '''
     try : 
-        df = pd.read_csv('nowe_poprawione_dane.csv') 
+        df = pd.read_csv('data.csv') 
     except : 
         try : 
-            df = pd.read_csv('src/nowe_poprawione_dane.csv') 
+            df = pd.read_csv('src/data.csv') 
         except :
             raise Exception('Data reading went wrong! Fix it !')
 
 
-    # Fill in data to have surnames at each column
-    new_nazwisko = []
+    # Fill in data to have surnames in each row
+    new_surname = []
     current_surname = ''
     for i in df['nazwisko']:
         if type(i) == str:
             current_surname = i
-        new_nazwisko.append(current_surname)
-    df['nazwisko'] = new_nazwisko
+        new_surname.append(current_surname)
+    df['nazwisko'] = new_surname
     df.rename(columns = {'wizyta po ilu zabiegach' : 'visit_number',
-                        'total clearence pomiedzy wizytami' : 'total_clearance_effect_between_visit',
+                        'total clearence pomiedzy wizytami' : 'total_clearence_in_between_visits',
                         'czas ' : 'time',
                         'nazwisko' : 'surname',
-                        'total clearence effect wzgledem poczatku' : 'total_clearence_effect_wzgledem_poczatku'
+                        'total clearence effect wzgledem poczatku' : 'total_clearence_in_respect_to_beginning'
                         }, inplace = True)
 
 
     #Format column order:
-    df = get_summed_time_column(df)
+    # df = get_summed_time_column(df)
     df = add_grouped_by_time_column(df, DEFAULT_GROUPS)
     df['------------'] = ''
     print('default time group has GROUPS defined as:',DEFAULT_GROUPS)

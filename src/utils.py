@@ -9,6 +9,13 @@ DEFAULT_GROUPS_NR_VISIT = [0,5,10,15,20]
 
 
 def add_grouped_by_time_column(df, GROUPS = DEFAULT_GROUPS, increment = 90):
+    '''
+    Take in DataFrame.
+    Create a new column representing time bucket to which each visit (each df row) gets assigned
+
+    This function isn't very robust.
+    GROUPS have to be in sync with increment
+    '''
     labeled_group = []
     for time in df.time:
         group = min(GROUPS, key=lambda x:abs(x-time)) // increment
@@ -18,6 +25,9 @@ def add_grouped_by_time_column(df, GROUPS = DEFAULT_GROUPS, increment = 90):
 
 
 def add_grouped_by_nr_visit_column(df, GROUPS = DEFAULT_GROUPS_NR_VISIT, increment = 5):
+    '''
+    Similarly like function above - but assign to column based 
+    '''
     labeled_group = []
     for visit_number in df.visit_number:
         group = min(GROUPS, key=lambda x:abs(x-visit_number)) // increment
