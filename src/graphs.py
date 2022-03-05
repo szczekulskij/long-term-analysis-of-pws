@@ -8,14 +8,16 @@ from src.statistical_tests import chi_squared_test
 
 LINEWIDTH = 5
 
+def get_name(column):
+    '''get name from a column'''
+    column_word_list = column.split('_')
+    name = ''
+    for word in column_word_list:
+        name+= word
+        name+= ' '
+    return name
+
 def agg_column_graph(df_, agg = 'mean', title = '', label = '', column = 'total_clearence_in_between_visits', cut_last_x_visits = False):
-    def get_name(column):
-        column_word_list = column.split('_')
-        name = ''
-        for word in column_word_list:
-            name+= word
-            name+= ' '
-        return name
 
 
     df = df_.copy(deep = True)
@@ -58,7 +60,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     aggregated_column = list(grouped_by_visit[column])
     plt.title(f"sredni mean clearence between visits {title}")
     plt.plot(time_groups, aggregated_column, label = label, linewidth = LINEWIDTH)
-    plt.xlabel('czas uplyniety (pogrupowany!)')
+    plt.xlabel('time passed (visits grouped into buckets)')
     try:
         plt.xticks(time_groups, DEFAULT_GROUPS)
     except:
@@ -81,7 +83,8 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
 
 
 
-    plt.ylabel(f'{agg} {column}')
+    column_name = get_name(column)
+    plt.ylabel(f'{agg} {column_name}')
     plt.axhline(y=0, color='r', linestyle='-')
     plt.legend()
 
@@ -98,7 +101,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
 
     return patients_per_bucket
 
-def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], increment = 90, skip_linear_fit = False):
+def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], increment = 90, skip_linear_fit = False, wizyty_iteration = [10,5,3,0]):
     from src.utils import DEFAULT_GROUPS
     if GROUPS and increment:
         DEFAULT_GROUPS = GROUPS
@@ -108,16 +111,21 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
     
     if not blizsze :
         # for i in [20,15,10,5,0]:
-        for i in [10,5,3, 0]:
-            patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number >= i], label = f'wizyty {i} i dalsze', GROUPS = GROUPS, increment = increment, skip_linear_fit = skip_linear_fit)
+        for i in wizyty_iteration:
+            # label = f'wizyty {i} i dalsze'
+            if i == 0 :
+                label = 'all visits'
+            else : 
+                label = f'visits with nunber {i} and further'
+            patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number >= i], label = label, GROUPS = GROUPS, increment = increment, skip_linear_fit = skip_linear_fit)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
-        plt.title('wizyty dalsze')
     else :
         # for i in [20,15,10,5,0]:
-        for i in [10,5,3,0]:
+        for i in wizyty_iteration:
             patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number <= i], label = f'wizyty {i} i blizsze', GROUPS = GROUPS, increment = increment, skip_linear_fit = skip_linear_fit)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
-        plt.title('wizyty blizsze')
+
+    plt.title('correlation between time buckets and total clearence between visits (improvement between visits)')
     return multiple_patients_per_bucket
 
 
