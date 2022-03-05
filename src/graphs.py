@@ -8,14 +8,32 @@ from src.statistical_tests import chi_squared_test
 
 LINEWIDTH = 5
 
-def agg_column_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearence_in_between_visits'):
+def agg_column_graph(df_, agg = 'mean', title = '', label = '', column = 'total_clearence_in_between_visits', cut_last_x_visits = False):
+    def get_name(column):
+        column_word_list = column.split('_')
+        name = ''
+        for word in column_word_list:
+            name+= word
+            name+= ' '
+        return name
+
+
+    df = df_.copy(deep = True)
+
+    if cut_last_x_visits:
+        if type(cut_last_x_visits) != int:
+            raise Exception(f'cut_last_x_visits variable should be an int but was: {type(cut_last_x_visits)}')
+        df = df.loc[df['visit_number'] <= cut_last_x_visits]
+
+
     grouped_by_visit = df.groupby('visit_number', as_index = False).agg({'time' : agg, 'total_clearence_in_between_visits' : agg, 'total_clearence_in_respect_to_beginning' : agg}, as_index = False)
     visits = [0] + list(grouped_by_visit['visit_number'])
-    plt.title(f"sredni mean clearence between visits {title}")
+    plt.title(title)
     aggregated_column = [0] + list(grouped_by_visit[column])
     plt.plot(visits, aggregated_column, label = label, linewidth = LINEWIDTH)
     plt.xlabel('visit number')
-    plt.ylabel(f'{agg} {column}')
+    column_name = get_name(column)
+    plt.ylabel(f'{agg} {column_name}')
     plt.axhline(y=0, color='r', linestyle='-')
     plt.legend()
     
