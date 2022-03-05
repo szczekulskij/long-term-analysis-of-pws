@@ -35,7 +35,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
         raise Exception('You need to input both GROUPS and increment!')
 
 
-    grouped_by_visit = df.groupby(base_column, as_index = False).agg({'time' : agg, 'total_cleatotal_clearence_in_between_visitsrance_effect_between_visit' : agg, 'total_clearence_in_respect_to_beginning' : agg}, as_index = False)
+    grouped_by_visit = df.groupby(base_column, as_index = False).agg({'time' : agg, 'total_clearence_in_between_visits' : agg, 'total_clearence_in_respect_to_beginning' : agg}, as_index = False)
     time_groups = np.array(list(grouped_by_visit[base_column]))
     aggregated_column = list(grouped_by_visit[column])
     plt.title(f"sredni mean clearence between visits {title}")

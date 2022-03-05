@@ -47,8 +47,8 @@ def get_visits_after_wait_time_x(df_, x, limit_on = True):
             raise Exception('The min x limit is on. The X (nr of days) should be 90 or bigger.')
 
 
+    df = df_.copy(deep = True)
     # Get data
-    df = get_data(format_type='all')
     return_df = pd.DataFrame()
     for surname in df.surname.unique():
         sub_df = df.loc[df['surname'] == surname]
