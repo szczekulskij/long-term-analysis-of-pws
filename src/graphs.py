@@ -8,8 +8,8 @@ from src.statistical_tests import chi_squared_test
 
 LINEWIDTH = 5
 
-def agg_column_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearance_effect_between_visit'):
-    grouped_by_visit = df.groupby('visit_number', as_index = False).agg({'time' : agg, 'total_clearance_effect_between_visit' : agg, 'total_clearence_effect_wzgledem_poczatku' : agg}, as_index = False)
+def agg_column_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearence_in_between_visits'):
+    grouped_by_visit = df.groupby('visit_number', as_index = False).agg({'time' : agg, 'total_clearence_in_between_visits' : agg, 'total_clearence_in_respect_to_beginning' : agg}, as_index = False)
     visits = [0] + list(grouped_by_visit['visit_number'])
     plt.title(f"sredni mean clearence between visits {title}")
     aggregated_column = [0] + list(grouped_by_visit[column])
@@ -20,7 +20,7 @@ def agg_column_graph(df, agg = 'mean', title = '', label = '', column = 'total_c
     plt.legend()
     
 
-def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearance_effect_between_visit', GROUPS = [], increment = 90, display_data_for_chi_square_test = False, base_column = 'time_group'):
+def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearence_in_between_visits', GROUPS = [], increment = 90, display_data_for_chi_square_test = False, base_column = 'time_group'):
     from src.utils import DEFAULT_GROUPS
     if base_column not in ['nr_visit_group', 'time_group']:
         raise Exception('base_column has to be one of the following:', ['nr_visit_group', 'time_group'])
@@ -35,7 +35,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
         raise Exception('You need to input both GROUPS and increment!')
 
 
-    grouped_by_visit = df.groupby(base_column, as_index = False).agg({'time' : agg, 'total_clearance_effect_between_visit' : agg, 'total_clearence_effect_wzgledem_poczatku' : agg}, as_index = False)
+    grouped_by_visit = df.groupby(base_column, as_index = False).agg({'time' : agg, 'total_cleatotal_clearence_in_between_visitsrance_effect_between_visit' : agg, 'total_clearence_in_respect_to_beginning' : agg}, as_index = False)
     time_groups = np.array(list(grouped_by_visit[base_column]))
     aggregated_column = list(grouped_by_visit[column])
     plt.title(f"sredni mean clearence between visits {title}")
@@ -102,7 +102,7 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
 
 def scatter_plot_against_time(df, label = '', label2 = '', plot_linear_fit = True):
     x = df['time']
-    y = df['total_clearance_effect_between_visit']
+    y = df['total_clearence_in_between_visits']
     m, b = np.polyfit(x, y, 1)
     x = [min(365,i) for i in x]
     plt.scatter(x,y, label = label)
@@ -120,7 +120,7 @@ def scatter_plot_against_time(df, label = '', label2 = '', plot_linear_fit = Tru
 def scatter_plot_against_visit_nr(df, label = '', label2 = '', plot_linear_fit = True, plot_type = 'scatter'):
     if plot_type =='scatter':
         x = np.array(df['visit_number'])
-        y = np.array(df['total_clearance_effect_between_visit'])
+        y = np.array(df['total_clearence_in_between_visits'])
         m, b = np.polyfit(x, y, 1)
         plt.scatter(x,y, label = label)
         if plot_linear_fit:
@@ -131,14 +131,14 @@ def scatter_plot_against_visit_nr(df, label = '', label2 = '', plot_linear_fit =
 
 
     elif plot_type == 'box':
-        df[['visit_number', 'total_clearance_effect_between_visit']].boxplot(by = 'visit_number',  figsize = [20,10])
-        display_df = df.groupby('visit_number').count()[['total_clearance_effect_between_visit']].rename(columns = {'total_clearance_effect_between_visit' : 'count'})
+        df[['visit_number', 'total_clearence_in_between_visits']].boxplot(by = 'visit_number',  figsize = [20,10])
+        display_df = df.groupby('visit_number').count()[['total_clearence_in_between_visits']].rename(columns = {'total_clearence_in_between_visits' : 'count'})
         
         if plot_linear_fit:
             # Linear fit to mean
-            linear_fit_df = df.groupby('visit_number', as_index = False).agg({'total_clearance_effect_between_visit':'mean'})[['total_clearance_effect_between_visit','visit_number']]
+            linear_fit_df = df.groupby('visit_number', as_index = False).agg({'total_clearence_in_between_visits':'mean'})[['total_clearence_in_between_visits','visit_number']]
             x = linear_fit_df['visit_number']
-            y = linear_fit_df['total_clearance_effect_between_visit']
+            y = linear_fit_df['total_clearence_in_between_visits']
             m, b = np.polyfit(x, y, 1)
             plt.plot(x, m*x + b, '--', linewidth = 2, linestyle = '--', label = label2)
             plt.xlim(0, 25)
