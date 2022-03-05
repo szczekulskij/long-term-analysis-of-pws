@@ -38,7 +38,7 @@ def agg_column_graph(df_, agg = 'mean', title = '', label = '', column = 'total_
     plt.legend()
     
 
-def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearence_in_between_visits', GROUPS = [], increment = 90, display_data_for_chi_square_test = False, base_column = 'time_group'):
+def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearence_in_between_visits', GROUPS = [], increment = 90, display_data_for_chi_square_test = False, base_column = 'time_group', skip_linear_fit = False):
     from src.utils import DEFAULT_GROUPS
     if base_column not in ['nr_visit_group', 'time_group']:
         raise Exception('base_column has to be one of the following:', ['nr_visit_group', 'time_group'])
@@ -67,14 +67,17 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
             NEW_DEFAULT_GROUPS.append(DEFAULT_GROUPS[index])
         plt.xticks(time_groups, NEW_DEFAULT_GROUPS)
 
-    # Get lineary fit graph:
-    # x = np.array(time_groups)
-    # y = aggregated_column
-    m, b = np.polyfit(time_groups, aggregated_column, 1)
-    plt.plot(time_groups, m*time_groups + b, '--', linewidth = 2, linestyle = '--')
-    # calculate the Pearson's correlation between two variables
-    corr, _ = pearsonr(time_groups, aggregated_column)
-    print(f'Pearsons correlation of the linear fit for {label}: %.3f' % corr, '(very bad practice though)')
+
+    if not skip_linear_fit:
+        
+        # Get lineary fit graph:
+        # x = np.array(time_groups)
+        # y = aggregated_column
+        m, b = np.polyfit(time_groups, aggregated_column, 1)
+        plt.plot(time_groups, m*time_groups + b, '--', linewidth = 2, linestyle = '--')
+        # calculate the Pearson's correlation between two variables
+        corr, _ = pearsonr(time_groups, aggregated_column)
+        print(f'Pearsons correlation of the linear fit for {label}: %.3f' % corr, '(very bad practice though)')
 
 
 
@@ -95,7 +98,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
 
     return patients_per_bucket
 
-def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], increment = 90):
+def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], increment = 90, skip_linear_fit = False):
     from src.utils import DEFAULT_GROUPS
     if GROUPS and increment:
         DEFAULT_GROUPS = GROUPS
@@ -106,13 +109,13 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
     if not blizsze :
         # for i in [20,15,10,5,0]:
         for i in [10,5,3, 0]:
-            patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number >= i], label = f'wizyty {i} i dalsze', GROUPS = GROUPS, increment = increment)
+            patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number >= i], label = f'wizyty {i} i dalsze', GROUPS = GROUPS, increment = increment, skip_linear_fit = skip_linear_fit)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
         plt.title('wizyty dalsze')
     else :
         # for i in [20,15,10,5,0]:
         for i in [10,5,3,0]:
-            patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number <= i], label = f'wizyty {i} i blizsze', GROUPS = GROUPS, increment = increment)
+            patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number <= i], label = f'wizyty {i} i blizsze', GROUPS = GROUPS, increment = increment, skip_linear_fit = skip_linear_fit)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
         plt.title('wizyty blizsze')
     return multiple_patients_per_bucket
