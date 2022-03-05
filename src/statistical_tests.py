@@ -119,10 +119,11 @@ def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, re
 
 
     if related_ttest:
-        # Remove later! This is very wrong
-        length = len(left_data) if len(left_data) < len(right_data) else len(right_data)
-        left_data = left_data.head(length)
-        right_data = right_data.head(length)
+        # This is currentely broken due to the sample sizes not being equal!
+        # length = len(left_data) if len(left_data) < len(right_data) else len(right_data)
+        # left_data_ = left_data.head(length)
+        # right_data_ = right_data.head(length)
+        # statistics, p_value = ttest_related(left_data_, right_data_, alternative = 'greater')
         statistics, p_value = ttest_related(left_data, right_data, alternative = 'greater')
     else :
         statistics, p_value = ttest_not_related(left_data, right_data, alternative = 'greater')

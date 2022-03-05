@@ -97,3 +97,33 @@ def get_summed_time_column(df):
         summed_time.append(current_summed_time)
     df['summed_time'] = summed_time
     return df
+
+
+def get_visits_after_wait_time_x(df_, x, limit_on = True):
+    '''
+    df - pd.DataFrame with data
+    x - int time after visits (put a min limit to x - to be 90 days), althought that limit can be turned off
+    '''
+    if limit_on:
+        if x < 90:
+            raise Exception('The min x limit is on. The X (nr of days) should be 90 or bigger.')
+
+
+    # Get data
+    df = get_data(format_type='all')
+    return_df = pd.DataFrame()
+    for surname in df.surname.unique():
+        sub_df = df.loc[df['surname'] == surname]
+        # print('sub_df:')
+        # display(sub_df)
+        # print()
+        for index, data in enumerate(sub_df.iterrows()):
+            _, visit = data
+            if visit['time'] >= x:
+                # print('sub_df,iloc[index:')
+                # print(index)
+                # display(sub_df.iloc[index:])
+                # print()
+                return_df = return_df.append(sub_df.iloc[index:], ignore_index = True)
+                break
+    return return_df
