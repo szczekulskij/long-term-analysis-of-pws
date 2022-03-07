@@ -41,6 +41,22 @@ def agg_column_graph(df_, agg = 'mean', title = '', label = '', column = 'total_
     
 
 def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearence_in_between_visits', GROUPS = [], increment = 90, display_data_for_chi_square_test = False, base_column = 'time_group', skip_linear_fit = False):
+
+
+    def get_labels(groups, increment):
+        '''
+        Given an array of groups - like [0,90,180,270,360] and their increment like 90
+        output labels for the plot to be built in form like: ['0-45', '46-90' ...]s
+        '''
+        output_labels = []
+        for i,_ in enumerate(groups):
+            if i == 0 :
+                label = f'{i} - {int(i * increment + increment/2)}'
+            else : 
+                label = f'{int(i * increment - increment/2) + 1} - {int(i * increment + increment/2)}'
+            output_labels.append(label)
+        return output_labels
+
     from src.utils import DEFAULT_GROUPS
     if base_column not in ['nr_visit_group', 'time_group']:
         raise Exception('base_column has to be one of the following:', ['nr_visit_group', 'time_group'])
@@ -62,12 +78,12 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     plt.plot(time_groups, aggregated_column, label = label, linewidth = LINEWIDTH)
     plt.xlabel('time passed (visits grouped into buckets)')
     try:
-        plt.xticks(time_groups, DEFAULT_GROUPS)
+        plt.xticks(time_groups, get_labels(DEFAULT_GROUPS, increment))
     except:
         NEW_DEFAULT_GROUPS = []
         for index in time_groups:
             NEW_DEFAULT_GROUPS.append(DEFAULT_GROUPS[index])
-        plt.xticks(time_groups, NEW_DEFAULT_GROUPS)
+        plt.xticks(time_groups, get_labels(NEW_DEFAULT_GROUPS, increment))
 
 
     if not skip_linear_fit:
@@ -130,8 +146,14 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
 
 
 def scatter_plot_against_time(df, label = '', label2 = '', plot_linear_fit = True):
+    from scipy.stats import linregress
     x = df['time']
     y = df['total_clearence_in_between_visits']
+    results = linregress(x,y)
+    print(results.pvalue)
+    print(results.rvalue)
+    print(results.intercept_stderr)
+    # slope, intercept, r_value, pvalue, stderr, intercept_stderr
     m, b = np.polyfit(x, y, 1)
     x = [min(365,i) for i in x]
     plt.scatter(x,y, label = label)
