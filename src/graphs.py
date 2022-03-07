@@ -30,14 +30,20 @@ def agg_column_graph(df_, agg = 'mean', title = '', label = '', column = 'total_
 
     grouped_by_visit = df.groupby('visit_number', as_index = False).agg({'time' : agg, 'total_clearence_in_between_visits' : agg, 'total_clearence_in_respect_to_beginning' : agg}, as_index = False)
     visits = [0] + list(grouped_by_visit['visit_number'])
-    plt.title(title)
+    plt.title(title, fontsize=16)
     aggregated_column = [0] + list(grouped_by_visit[column])
     plt.plot(visits, aggregated_column, label = label, linewidth = LINEWIDTH)
-    plt.xlabel('visit number')
+    plt.xlabel('number of laser sessions', fontsize=16)
     column_name = get_name(column)
-    plt.ylabel(f'{agg} {column_name}')
+    # plt.ylabel(f'{agg} {column_name}', fontsize=16)
+    plt.ylabel(f'% mean improvement (total clearence)', fontsize=16)
+
     plt.axhline(y=0, color='r', linestyle='-')
     plt.legend()
+
+    ax = plt.gca()
+    for label in (ax.get_xticklabels() + ax.get_yticklabels()):
+        label.set_fontsize(14.5)
     
 
 def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearence_in_between_visits', GROUPS = [], increment = 90, display_data_for_chi_square_test = False, base_column = 'time_group', skip_linear_fit = False):
@@ -74,9 +80,10 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     grouped_by_visit = df.groupby(base_column, as_index = False).agg({'time' : agg, 'total_clearence_in_between_visits' : agg, 'total_clearence_in_respect_to_beginning' : agg}, as_index = False)
     time_groups = np.array(list(grouped_by_visit[base_column]))
     aggregated_column = list(grouped_by_visit[column])
-    plt.title(f"sredni mean clearence between visits {title}")
+    plt.title(f"sredni mean clearence between visits {title}", fontsize=16)
     plt.plot(time_groups, aggregated_column, label = label, linewidth = LINEWIDTH)
-    plt.xlabel('time passed (visits grouped into buckets)')
+    plt.xlabel('Days passed between two visits\n (clustered into buckets)', fontsize=16)
+    
     try:
         plt.xticks(time_groups, get_labels(DEFAULT_GROUPS, increment))
     except:
@@ -100,7 +107,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
 
 
     column_name = get_name(column)
-    plt.ylabel(f'{agg} {column_name}')
+    plt.ylabel(f'% mean improvement\n inbetween visits\n', fontsize=16)
     plt.axhline(y=0, color='r', linestyle='-')
     plt.legend()
 
@@ -114,6 +121,10 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     # chi squared contigency test
     chi_squared_test(df, GROUPS, increment, display_data_for_chi_square_test, name = label, column_name = base_column)
     print()
+
+    ax = plt.gca()
+    for label in (ax.get_xticklabels() + ax.get_yticklabels()):
+        label.set_fontsize(14.5)
 
     return patients_per_bucket
 
@@ -141,7 +152,13 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
             patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number <= i], label = f'wizyty {i} i blizsze', GROUPS = GROUPS, increment = increment, skip_linear_fit = skip_linear_fit)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
 
-    plt.title('correlation between time buckets and total clearence between visits (improvement between visits)')
+    plt.title('correlation between time passed between visits and total clearence between visits', fontsize=16)
+    plt.title('')
+
+    ax = plt.gca()
+    for label in (ax.get_xticklabels() + ax.get_yticklabels()):
+        label.set_fontsize(14.5)
+
     return multiple_patients_per_bucket
 
 
@@ -159,7 +176,7 @@ def scatter_plot_against_time(df, label = '', label2 = '', plot_linear_fit = Tru
     plt.scatter(x,y, label = label)
     plt.axhline(y=0, color='r', linestyle='-')
     plt.xlabel('time passed (days)')
-    plt.ylabel('total clearance effect between visits')
+    plt.ylabel('total clearance effect between visits', fontsize=16)
     x = np.array(x)
     m, b = np.polyfit(x, y, 1)
     if plot_linear_fit:
@@ -197,7 +214,7 @@ def scatter_plot_against_visit_nr(df, label = '', label2 = '', plot_linear_fit =
             print('Pearsons correlation: %.3f' % corr)
     plt.axhline(y=0, color='r', linestyle='-')
     plt.xlabel('visit nr')
-    plt.ylabel('total clearance effect between visits')
+    plt.ylabel('total clearance effect between visits', fontsize=16)
 
 
 
