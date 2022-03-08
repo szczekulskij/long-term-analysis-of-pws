@@ -74,13 +74,16 @@ def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name
         DEFAULT_GROUPS = GROUPS
     
     # chi squared data
-    df['below 0'] = df.apply(lambda row: False if row['total_clearence_in_between_visits'] > 0 else True, axis = 1 )
+    df['mean improvement below 0'] = df.apply(lambda row: False if row['total_clearence_in_between_visits'] > 0 else True, axis = 1 )
     if display_data:
         display(df.head(5))
 
-    data = df.groupby(by = ['below 0', column_name], as_index = False).count()
-    data = data[['below 0', column_name, 'surname']].rename(columns = {'surname' : 'count'})
-    data = data.pivot(index = 'below 0', columns = column_name, values = 'count')
+
+    df.rename(columns = {'time_group' : 'days passed'}, inplace = True)
+    column_name = 'days passed'
+    data = df.groupby(by = ['mean improvement below 0', column_name], as_index = False).count()
+    data = data[['mean improvement below 0', column_name, 'surname']].rename(columns = {'surname' : 'count'})
+    data = data.pivot(index = 'mean improvement below 0', columns = column_name, values = 'count')
     if display_data:
         print('GROUPS:', DEFAULT_GROUPS)
         display(data)
@@ -90,10 +93,12 @@ def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name
     chi2, p, dof, ex = chi2_contingency(np.array(data))
     print(f'p-value of chi squred contigency test for {name}: {p} (w. Yates correction - good practice)')
 
+    expected_frequences = pd.DataFrame(ex, index= ['False', 'True'])
     if display_data:
         print('expected frequencies were:')
-        display(pd.DataFrame(ex, index= ['False', 'True']))
+        display(expected_frequences)
 
+    return data, expected_frequences
 
 
 
