@@ -88,9 +88,9 @@ plt.figure(figsize=(20,10))
 data = get_data(format_type='all',remove_minus_ones = False )
 data2 = get_data(format_type='moved_to_0',remove_minus_ones = False )
 data3 = get_data(format_type='all_without_0s',remove_minus_ones = False )
-agg_column_graph(data, label = 'data bez zmian', column = 'total_clearence_effect_wzgledem_poczatku')
-agg_column_graph(data2, label = 'data moved to 0', column = 'total_clearence_effect_wzgledem_poczatku')
-agg_column_graph(data3, label = 'data without patients without 1st visit', column = 'total_clearence_effect_wzgledem_poczatku')
+agg_column_graph(data, label = 'data bez zmian', column = 'total_clearence_in_respect_to_beginning')
+agg_column_graph(data2, label = 'data moved to 0', column = 'total_clearence_in_respect_to_beginning')
+agg_column_graph(data3, label = 'data without patients without 1st visit', column = 'total_clearence_in_respect_to_beginning')
 ```
 
 ### Srednia poprawa miedzy wizytami:
@@ -366,11 +366,11 @@ data4 = get_visits_after_wait_time_x(data, 270)
 data5 = get_visits_after_wait_time_x(data, 360)
 
 
-agg_column_graph(data, label = 'data - moved by 90d', column = 'total_clearence_effect_wzgledem_poczatku')
-agg_column_graph(data2, label = 'data - moved by 120d', column = 'total_clearence_effect_wzgledem_poczatku')
-agg_column_graph(data3, label = 'data - moved by 180d', column = 'total_clearence_effect_wzgledem_poczatku')
-agg_column_graph(data4, label = 'data - moved by 270d', column = 'total_clearence_effect_wzgledem_poczatku')
-agg_column_graph(data5, label = 'data - moved by 360d', column = 'total_clearence_effect_wzgledem_poczatku')
+agg_column_graph(data, label = 'data - moved by 90d', column = 'total_clearence_in_respect_to_beginning')
+agg_column_graph(data2, label = 'data - moved by 120d', column = 'total_clearence_in_respect_to_beginning')
+agg_column_graph(data3, label = 'data - moved by 180d', column = 'total_clearence_in_respect_to_beginning')
+agg_column_graph(data4, label = 'data - moved by 270d', column = 'total_clearence_in_respect_to_beginning')
+agg_column_graph(data5, label = 'data - moved by 360d', column = 'total_clearence_in_respect_to_beginning')
 ```
 
 ## Next steps (to be done by the end of the week)

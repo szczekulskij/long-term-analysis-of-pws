@@ -8,34 +8,62 @@ POSSIBLE_INPUTS = ['all', 'moved_to_0', 'all_without_0s']
 def get_data(format_type, remove_minus_ones = True):
 
     '''
-    format_type = 'all' or 'moved_to_0' or 'all_without_0s'
-    '''
-    if format_type not in POSSIBLE_INPUTS:
-        raise Exception(f'Wrong format_type input Jan! You input: {format_type}, but has to be one of {POSSIBLE_INPUTS}')
+    This functions reads the data from csv files and transforms it accordingly. (have a look at data.csv file)
 
-    # df = pd.read_csv('12.11 malformacje kapilarne lon.csv')
+    The data in csv file is in form one visit per row
+    The data in csv file has holes in it. Aka - we might not have first few visits, or we might not have few visits in between.
+
+    For every visit we could calculate healing in respect to beginning (called total_clearence_in_respect_to_beginning)
+    Only when we have 2 visits in the row, can we calculate healing in respect to previous visit (called total_clearence_in_between_visits), 
+    Therefore when unable to calculate total_clearence_in_between_visits - instead of empty space, I've put a -1 there.
+
+
+    Parameters
+    ---------------------------------------------------
+    format_type: str
+        'all' - no changes to data
+        'moved_to_0' - move visit_nr of people who didn't have first few visits (Bad practice. Used due to lack of data)
+        'all_without_0s' - remove visitors who didn't have the first visit
+        
+
+    remove_minus_ones: bool
+        Remove visits that didn't have total_clearence_in_between_visits (so they had -1 in place of total_clearence_in_between_visits)
+        
+
+    Returns
+    ---------------------------------------------------    
+    return pd.DataFrame w. visits data
+        Each row represents one medical visit which aim was to heal the birth scar (port-wine stain)
+        Each row has a data on:
+            * surname - surname of patient & nr of patient (ex. 4.Ball)
+            * total_clearence_in_between_visits - How sucessful was healing compared to previous visit (in %)
+            * total_clearence_in_respect_to_beginning - How sucessful was healing compared to very beginning, before any visits  (in %)
+            * time - How many days passed since last visit 
+            * visir_number - visit number
+
+    '''
     try : 
-        df = pd.read_csv('nowe_poprawione_dane.csv') 
+        df = pd.read_csv('data.csv') 
     except : 
         try : 
-            df = pd.read_csv('src/nowe_poprawione_dane.csv') 
+            df = pd.read_csv('src/data.csv') 
         except :
             raise Exception('Data reading went wrong! Fix it !')
 
 
-    # Fill in data to have surnames at each column
-    new_nazwisko = []
+    # Fill in data to have surnames in each row
+    new_surname = []
     current_surname = ''
     for i in df['nazwisko']:
         if type(i) == str:
             current_surname = i
-        new_nazwisko.append(current_surname)
-    df['nazwisko'] = new_nazwisko
+        new_surname.append(current_surname)
+    df['nazwisko'] = new_surname
     df.rename(columns = {'wizyta po ilu zabiegach' : 'visit_number',
-                        'total clearence pomiedzy wizytami' : 'total_clearance_effect_between_visit',
+                        'total clearence pomiedzy wizytami' : 'total_clearence_in_between_visits',
                         'czas ' : 'time',
                         'nazwisko' : 'surname',
-                        'total clearence effect wzgledem poczatku' : 'total_clearence_effect_wzgledem_poczatku'
+                        'total clearence effect wzgledem poczatku' : 'total_clearence_in_respect_to_beginning'
                         }, inplace = True)
 
 
@@ -44,10 +72,10 @@ def get_data(format_type, remove_minus_ones = True):
     df = add_grouped_by_time_column(df, DEFAULT_GROUPS)
     df['------------'] = ''
     print('default time group has GROUPS defined as:',DEFAULT_GROUPS)
-    df = df[['surname', 'time','summed_time','time_group', 'visit_number','total_clearance_effect_between_visit', 'total_clearence_effect_wzgledem_poczatku',  '------------']]
+    df = df[['surname', 'time','summed_time','time_group', 'visit_number','total_clearence_in_between_visits', 'total_clearence_in_respect_to_beginning',  '------------']]
 
     if remove_minus_ones:
-        df = df.loc[df['total_clearance_effect_between_visit'] != -1]
+        df = df.loc[df['total_clearence_in_between_visits'] != -1]
 
     if format_type == 'all':
         pass
@@ -97,33 +125,3 @@ def get_summed_time_column(df):
         summed_time.append(current_summed_time)
     df['summed_time'] = summed_time
     return df
-
-
-def get_visits_after_wait_time_x(df_, x, limit_on = True):
-    '''
-    df - pd.DataFrame with data
-    x - int time after visits (put a min limit to x - to be 90 days), althought that limit can be turned off
-    '''
-    if limit_on:
-        if x < 90:
-            raise Exception('The min x limit is on. The X (nr of days) should be 90 or bigger.')
-
-
-    # Get data
-    df = get_data(format_type='all')
-    return_df = pd.DataFrame()
-    for surname in df.surname.unique():
-        sub_df = df.loc[df['surname'] == surname]
-        # print('sub_df:')
-        # display(sub_df)
-        # print()
-        for index, data in enumerate(sub_df.iterrows()):
-            _, visit = data
-            if visit['time'] >= x:
-                # print('sub_df,iloc[index:')
-                # print(index)
-                # display(sub_df.iloc[index:])
-                # print()
-                return_df = return_df.append(sub_df.iloc[index:], ignore_index = True)
-                break
-    return return_df

@@ -1,4 +1,4 @@
-def outliers_filtering(df, outlier_filter_type = 'quantile', outlier_column = 'total_clearance_effect_between_visit', quantile = 0.1):
+def outliers_filtering(df, outlier_filter_type = 'quantile', outlier_column = 'total_clearence_in_between_visits', quantile = 0.1):
     '''
 
     Parameters
@@ -8,7 +8,7 @@ def outliers_filtering(df, outlier_filter_type = 'quantile', outlier_column = 't
         either "quantile" or ...
 
     outlier_column: str
-        either `total_clearance_effect_between_visit` or `total_clearence_effect_wzgledem_poczatku`
+        either `total_clearence_in_between_visits` or `total_clearence_in_respect_to_beginning`
 
     Returns
     -----------
@@ -17,7 +17,7 @@ def outliers_filtering(df, outlier_filter_type = 'quantile', outlier_column = 't
     '''
     STARTING_DF = df.copy(deep = True)
     POSSIBLE_FILTERS = ['quantile']
-    POSSIBLE_COLUMNS = ['total_clearance_effect_between_visit', 'total_clearance_effect_between_visit']
+    POSSIBLE_COLUMNS = ['total_clearence_in_between_visits', 'total_clearence_in_between_visits']
 
     # Handle parameters
     if outlier_filter_type not in POSSIBLE_FILTERS:
@@ -39,7 +39,7 @@ def outliers_filtering(df, outlier_filter_type = 'quantile', outlier_column = 't
 
 
 # Define helper functions:
-def quantile_filter(df, outlier_column = 'total_clearance_effect_between_visit', quantile = 0.1):
+def quantile_filter(df, outlier_column = 'total_clearence_in_between_visits', quantile = 0.1):
     if quantile > 0.5:
         raise Exception('Provide lower quantile only!')
     LOWER_QUANTILE = quantile
