@@ -48,19 +48,16 @@ def agg_column_graph(df_, agg = 'mean', title = '', label = '', column = 'total_
 
 def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column = 'total_clearence_in_between_visits', GROUPS = [], increment = 90, display_data_for_chi_square_test = False, base_column = 'time_group', skip_linear_fit = False):
 
-
     def get_labels(groups, increment):
         '''
         Given an array of groups - like [0,90,180,270,360] and their increment like 90
-        output labels for the plot to be built in form like: ['0-45', '46-90' ...]s
+        output labels for the plot to be built in form like: ['0-90', '90-180' '180-270', '270-360','360+']s
         '''
         output_labels = []
-        for i,_ in enumerate(groups):
-            if i == 0 :
-                label = f'{i} - {int(i * increment + increment/2)}'
-            else : 
-                label = f'{int(i * increment - increment/2) + 1} - {int(i * increment + increment/2)}'
+        for index in range(len(groups)- 1) :
+            label = f"{groups[index]} - {groups[index+1]}"
             output_labels.append(label)
+        output_labels.append(f"{groups[-1]}+ ")
         return output_labels
 
     from src.utils import DEFAULT_GROUPS
@@ -73,31 +70,28 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
         elif base_column == 'nr_visit_group':
             df = add_grouped_by_nr_visit_column(df, GROUPS, increment)
         DEFAULT_GROUPS = GROUPS
-    elif GROUPS:
+    elif not GROUPS:
+        DEFAULT_GROUPS = DEFAULT_GROUPS
+    else :
         raise Exception('You need to input both GROUPS and increment!')
 
 
-    grouped_by_visit = df.groupby(base_column, as_index = False).agg({'time' : agg, 'total_clearence_in_between_visits' : agg, 'total_clearence_in_respect_to_beginning' : agg}, as_index = False)
+    grouped_by_visit = df.groupby(base_column, as_index = False)\
+                         .agg({'time' : agg, 'total_clearence_in_between_visits' : agg, 'total_clearence_in_respect_to_beginning' : agg}, as_index = False)
     time_groups = np.array(list(grouped_by_visit[base_column]))
     aggregated_column = list(grouped_by_visit[column])
     plt.title(f"sredni mean clearence between visits {title}", fontsize=16)
     plt.plot(time_groups, aggregated_column, label = label, linewidth = LINEWIDTH)
     plt.xlabel('Days passed between two visits\n (clustered into buckets)', fontsize=16)
     
-    try:
-        plt.xticks(time_groups, get_labels(DEFAULT_GROUPS, increment))
-    except:
-        NEW_DEFAULT_GROUPS = []
-        for index in time_groups:
-            NEW_DEFAULT_GROUPS.append(DEFAULT_GROUPS[index])
-        plt.xticks(time_groups, get_labels(NEW_DEFAULT_GROUPS, increment))
+    
+    generated_labels = get_labels(DEFAULT_GROUPS, increment)
+    time_groups = [i+1 for i in range(len(generated_labels))]
+    plt.xticks(time_groups, generated_labels)
 
 
     if not skip_linear_fit:
-        
         # Get lineary fit graph:
-        # x = np.array(time_groups)
-        # y = aggregated_column
         m, b = np.polyfit(time_groups, aggregated_column, 1)
         plt.plot(time_groups, m*time_groups + b, '--', linewidth = 2, linestyle = '--')
         # calculate the Pearson's correlation between two variables
@@ -105,8 +99,6 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
         print(f'Pearsons correlation of the linear fit for {label}: %.3f' % corr, '(very bad practice though)')
 
 
-
-    column_name = get_name(column)
     plt.ylabel(f'% mean improvement\n inbetween visits\n', fontsize=16)
     plt.axhline(y=0, color='r', linestyle='-')
     plt.legend()
@@ -116,7 +108,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     grouped_by_visit = df.groupby(base_column, as_index = False)
     patients_per_bucket = grouped_by_visit['------------'].count()
     patients_per_bucket.rename(columns = {'------------' : f'patients_in_bucket {label}'}, inplace = True)
-    patients_per_bucket[base_column] = patients_per_bucket[base_column] * increment
+    patients_per_bucket[base_column] = (patients_per_bucket[base_column] - 1) * increment
 
     # chi squared contigency test
     chi_squared_test(df, GROUPS, increment, display_data_for_chi_square_test, name = label, column_name = base_column)
@@ -128,6 +120,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
 
     return patients_per_bucket
 
+
 def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], increment = 90, skip_linear_fit = False, wizyty_iteration = [10,5,3,0]):
     from src.utils import DEFAULT_GROUPS
     if GROUPS and increment:
@@ -137,9 +130,7 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
     plt.figure(figsize=(20,10))
     
     if not blizsze :
-        # for i in [20,15,10,5,0]:
         for i in wizyty_iteration:
-            # label = f'wizyty {i} i dalsze'
             if i == 0 :
                 label = 'all visits'
             else : 
@@ -147,10 +138,12 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
             patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number >= i], label = label, GROUPS = GROUPS, increment = increment, skip_linear_fit = skip_linear_fit)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
     else :
-        # for i in [20,15,10,5,0]:
         for i in wizyty_iteration:
             patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number <= i], label = f'wizyty {i} i blizsze', GROUPS = GROUPS, increment = increment, skip_linear_fit = skip_linear_fit)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
+
+
+
 
     plt.title('correlation between time passed between visits and total clearence between visits', fontsize=16)
     plt.title('')

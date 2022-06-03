@@ -8,6 +8,23 @@ DEFAULT_GROUPS = [0,90,180,270,360]
 DEFAULT_GROUPS_NR_VISIT = [0,5,10,15,20]
 
 
+def group_func(x, groups):
+    '''
+    groups is sth like: [0,90,180,270]
+    func(80) -> 1 (since it's between 0 and 90)
+    func(190) -> 3 (since it's between 0 and 90)
+    func(500) -> 4 (since it's bigger than 270)
+    '''
+    for index in range(1, len(groups)):
+        min_group = groups[index - 1]
+        max_group = groups[index]
+        if x>=min_group and x < max_group :
+            return index
+        # Special case when we ran out of groups
+        elif index == len(groups) - 1:
+            if x >= max_group:
+                return index + 1
+
 def add_grouped_by_time_column(df, GROUPS = DEFAULT_GROUPS, increment = 90):
     '''
     Take in DataFrame.
@@ -18,7 +35,7 @@ def add_grouped_by_time_column(df, GROUPS = DEFAULT_GROUPS, increment = 90):
     '''
     labeled_group = []
     for time in df.time:
-        group = min(GROUPS, key=lambda x:abs(x-time)) // increment
+        group = group_func(time, GROUPS)
         labeled_group.append(group)
     df['time_group'] = labeled_group
     return df
@@ -30,7 +47,7 @@ def add_grouped_by_nr_visit_column(df, GROUPS = DEFAULT_GROUPS_NR_VISIT, increme
     '''
     labeled_group = []
     for visit_number in df.visit_number:
-        group = min(GROUPS, key=lambda x:abs(x-visit_number)) // increment
+        group = group_func(visit_number, GROUPS)
         labeled_group.append(group)
     df['nr_visit_group'] = labeled_group
     return df
