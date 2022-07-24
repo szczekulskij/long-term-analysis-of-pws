@@ -38,6 +38,8 @@ def get_stats_for_abstract(df = None, format_type = None):
     x = x / all_patients * 100 
     print('% of patients that had a total_clearence of minimum 90%:', x)
 
+    
+
     return data
 
 def get_stats_for_abstract2(df = None, format_type = None, visit_number_buckets = 0):
