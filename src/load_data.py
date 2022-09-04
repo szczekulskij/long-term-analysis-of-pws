@@ -12,7 +12,6 @@ def get_data(format_type, remove_minus_ones = True):
 
     The data in csv file is in form one visit per row
     The data in csv file has holes in it. Aka - we might not have first few visits, or we might not have few visits in between.
-
     For every visit we could calculate healing in respect to beginning (called total_clearence_in_respect_to_beginning)
     Only when we have 2 visits in the row, can we calculate healing in respect to previous visit (called total_clearence_in_between_visits), 
     Therefore when unable to calculate total_clearence_in_between_visits - instead of empty space, I've put a -1 there.
