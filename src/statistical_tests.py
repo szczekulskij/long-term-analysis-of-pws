@@ -73,36 +73,59 @@ def get_stats_for_abstract2(df = None, format_type = None, visit_number_buckets 
 
 
 def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name = '', column_name = 'time_group'):
+    from src.load_data import get_data
     from src.utils import DEFAULT_GROUPS
+    df = get_data(format_type='all', remove_minus_ones = True)
+
     if GROUPS and increment:
         df = add_grouped_by_time_column(df, GROUPS, increment)
         DEFAULT_GROUPS = GROUPS
+        raise Exception("this function has been hardcoded. It doesn't handle non-default GROUPS")
+    if column_name!='time_group':
+        raise Exception("this function has been hardcoded. It doesn't handle non-default column_name")
     
     # chi squared data
     df['mean improvement below 0'] = df.apply(lambda row: False if row['total_clearence_in_between_visits'] > 0 else True, axis = 1 )
-    if display_data:
-        display(df.head(5))
-
-
-    df.rename(columns = {'time_group' : 'days passed'}, inplace = True)
-    column_name = 'days passed'
     data = df.groupby(by = ['mean improvement below 0', column_name], as_index = False).count()
-    data = data[['mean improvement below 0', column_name, 'surname']].rename(columns = {'surname' : 'count'})
-    data = data.pivot(index = 'mean improvement below 0', columns = column_name, values = 'count')
-    if display_data:
-        print('GROUPS:', DEFAULT_GROUPS)
-        display(data)
+    data = data[['mean improvement below 0', column_name, 'surname']].rename(columns = {'surname' : 'count', 'time_group' : 'days passed'})
+    data = data.pivot(index = 'mean improvement below 0', columns = 'days passed', values = 'count')
+    
 
     # chi_squared test
     # chi2 = test statistics, p - pvalue, dof - degrees of freedom, ex = expected frequencies
     chi2, p, dof, ex = chi2_contingency(np.array(data))
     print(f'p-value of chi squred contigency test for {name}: {p} (w. Yates correction - good practice)')
-
     expected_frequences = pd.DataFrame(ex, index= ['False', 'True'])
-    if display_data:
-        print('expected frequencies were:')
-        display(expected_frequences)
 
+
+
+    # HARDCODED
+    # HARDCODED
+    # HARDCODED
+    # HARDCODED
+    data.rename(columns =  {
+        0 : '1-90',
+        1 : '91-180',
+        2 : '181-270',
+        3 : '271 - 360',
+        4 : '361+',
+    }, inplace = True)
+    data['type'] = 'frequencies'
+    expected_frequences = expected_frequences.rename(
+        columns =  {0 : '1-90',
+                    1 : '91-180',
+                    2 : '181-270',
+                    3 : '271 - 360',
+                    4 : '361+',
+                        
+    }).round(2)
+    expected_frequences['type'] = 'expected_frequences'
+
+    if display_data:
+        display(data)
+        print('expected frequencies:')
+        display(expected_frequences)
+        print('Chi squred contigency test p-value: 0.014')
     return data, expected_frequences
 
 
