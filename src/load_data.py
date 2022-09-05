@@ -44,10 +44,7 @@ def get_data(format_type, remove_minus_ones = True):
     try : 
         df = pd.read_csv('data.csv') 
     except : 
-        try : 
-            df = pd.read_csv('src/data.csv') 
-        except :
-            raise Exception('Data reading went wrong! Fix it !')
+        raise Exception('Data reading went wrong! Fix it !')
 
 
     # Fill in data to have surnames in each row
