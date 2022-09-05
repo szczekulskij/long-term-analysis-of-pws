@@ -126,13 +126,15 @@ def chi_squared_test(df, GROUPS = [], increment = 90, display_data = False, name
         print('expected frequencies:')
         display(expected_frequences)
         print('Chi squred contigency test p-value: 0.014')
+
+    expected_frequences = expected_frequences.pivot(index = 'mean improvement below 0', columns = 'days passed', values = 'count')
     return data, expected_frequences
 
 
 
 
 
-def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, related_ttest = True):
+def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, related_ttest = True, clearence_type  = 'total_clearence_in_between_visits'):
     df = df[['visit_number', 'total_clearence_in_between_visits', 'time']]
 
     if time_threshold and not visit_nr_threshold:
@@ -169,7 +171,7 @@ def ttest_against_time_threshold(df,time_threshold = 0, visit_nr_threshold=0, re
 def bucket_anova_n_plot(
     bucket_column = 'visit_number',
     variable_column = 'total_clearence_in_respect_to_beginning',
-    buckets = [1,3,6,10,15],
+    buckets = [1,3,6,10,15,],
 ):
 
     df = get_data(format_type='all', remove_minus_ones = False)
@@ -179,6 +181,11 @@ def bucket_anova_n_plot(
         bucket_min = buckets[i]
         bucket_max = buckets[i+1]
         bucket_range = f"{bucket_min} - {bucket_max - 1}"
+
+
+        # Extra special case handle line:
+        if bucket_max == 100:
+            bucket_range = f"{bucket_min} +"
 
         visits_data = list(df.loc[(df[bucket_column] >= bucket_min) & (df[bucket_column] < bucket_max)][variable_column])
         data_dict[bucket_range] = visits_data
