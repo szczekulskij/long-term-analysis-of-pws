@@ -119,8 +119,8 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     patients_per_bucket[base_column] = patients_per_bucket[base_column] * increment
 
     # chi squared contigency test
-    chi_squared_test(df, GROUPS, increment, display_data_for_chi_square_test, name = label, column_name = base_column)
-    print()
+    # chi_squared_test(df, GROUPS, increment, display_data_for_chi_square_test, name = label, column_name = base_column)
+    # print()
 
     ax = plt.gca()
     for label in (ax.get_xticklabels() + ax.get_yticklabels()):
