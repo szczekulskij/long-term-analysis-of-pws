@@ -220,6 +220,28 @@ def scatter_plot_against_visit_nr(df, label = '', label2 = '', plot_linear_fit =
 
 
 
+def get_graph_GCE_vs_pct_people():
+    from src.load_data import get_data
+    def get_pct_of_people_over_x(df, x):
+        nr = len(data.loc[data['total_clearence_in_respect_to_beginning'] >=x] )
+        pct = round(nr/len(df) * 100, 2)
+        return pct
+
+    data = get_data(format_type='all', remove_minus_ones = False).groupby(by  = 'surname', as_index = False).agg({'total_clearence_in_respect_to_beginning' : 'max'})
+    x = len(data.loc[data['total_clearence_in_respect_to_beginning'] >=25] )
+    list_of_limits = [i for i in range(0,100,5)]
+    limits_data = [get_pct_of_people_over_x(data, x) for x in list_of_limits]
+    for a,b in zip(limits_data, list_of_limits):
+        print(f"limit: {b}. |% patients: {a}")
+
+    plt.figure(figsize=(20,10))
+    plt.bar(list_of_limits, limits_data, width = 4)
+    plt.xlabel("GCE threshold", size = 30)
+    plt.ylabel("% of patients over GCE threshold", size = 30)
+
+
+
+
 
 #############################################################################
 ############################ DEPRECATED GRAPHS ############################
