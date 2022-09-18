@@ -82,7 +82,7 @@ def time_group_based_avg_graph(df, agg = 'mean', title = '', label = '', column 
     aggregated_column = list(grouped_by_visit[column])
     plt.title(f"sredni mean clearence between visits {title}", fontsize=16)
     plt.plot(time_groups, aggregated_column, label = label, linewidth = LINEWIDTH)
-    plt.xlabel('Days passed between two visits\n (clustered into buckets)', fontsize=16)
+    plt.xlabel('Days passed between two consecutive visits\n (clustered into buckets)', fontsize=16)
     
     try:
         plt.xticks(time_groups, get_labels(DEFAULT_GROUPS, increment))
@@ -152,7 +152,7 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
             patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number <= i], label = f'wizyty {i} i blizsze', GROUPS = GROUPS, increment = increment, skip_linear_fit = skip_linear_fit)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
 
-    plt.title('correlation between time passed between visits and total clearence between visits', fontsize=16)
+    plt.title('correlation between time passed between 2 consecutive visits and total clearence(GCE) between visits', fontsize=16)
     plt.title('')
 
     ax = plt.gca()

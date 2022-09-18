@@ -228,7 +228,7 @@ def bucket_anova_n_plot(
 
     # Move it to func
 
-    p_values[2] = 'n.s.'
+    # p_values[2] = 'n.s.'
     plt.figure(figsize=(20,10))
     index = 1
     x_ticks = []
