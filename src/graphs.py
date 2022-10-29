@@ -152,8 +152,11 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
             patients_per_bucket = time_group_based_avg_graph(df.loc[df.visit_number <= i], label = f'wizyty {i} i blizsze', GROUPS = GROUPS, increment = increment, skip_linear_fit = skip_linear_fit)
             multiple_patients_per_bucket = multiple_patients_per_bucket.merge(patients_per_bucket, on = 'time_group', how = 'outer').fillna(0).astype('int64')
 
-    plt.title('correlation between time passed between 2 consecutive visits and total clearence(GCE) between visits', fontsize=16)
-    plt.title('')
+    # plt.title('correlation between time passed between 2 consecutive visits and total clearence(GCE) between visits', fontsize=30)
+    plt.title("")
+    plt.xlabel("Days passed betweens two consecutive visits", size = 30)
+    plt.ylabel("% relative GCE improvement\n(improvement in-between sessions)", size = 30)
+
 
     ax = plt.gca()
     for label in (ax.get_xticklabels() + ax.get_yticklabels()):
