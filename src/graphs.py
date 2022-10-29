@@ -154,8 +154,8 @@ def graph_multiple_time_group_based_avg_graph(df, blizsze = False, GROUPS = [], 
 
     # plt.title('correlation between time passed between 2 consecutive visits and total clearence(GCE) between visits', fontsize=30)
     plt.title("")
-    plt.xlabel("Days passed betweens two consecutive visits", size = 30)
-    plt.ylabel("% relative GCE improvement\n(improvement in-between sessions)", size = 30)
+    plt.xlabel("Days passed betweens two consecutive visits \n(clustered into buckets)")
+    plt.ylabel("% mean improvement inbetween consecutive visits")
 
 
     ax = plt.gca()

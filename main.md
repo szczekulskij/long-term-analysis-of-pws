@@ -131,7 +131,7 @@ for bucket_range, data in data_dict.items():
 ```python
 # Move it to func
 
-p_values[2] = 'n.s.'
+# p_values[2] = 'n.s.'
 plt.figure(figsize=(20,10))
 
 index = 1

@@ -72,7 +72,7 @@ def get_data(format_type, remove_minus_ones = True):
     df = add_grouped_by_time_column(df, DEFAULT_GROUPS)
     df['------------'] = ''
     print('default time group has GROUPS defined as:',DEFAULT_GROUPS)
-    df = df[['surname', 'time','summed_time','time_group', 'visit_number','total_clearence_in_between_visits', 'total_clearence_in_respect_to_beginning',  '------------']]
+    df = df[['surname', 'time','summed_time','time_group', 'visit_number','total_clearence_in_between_visits', 'total_clearence_in_respect_to_beginning',  '------------', 'previous treatment',]]
 
     if remove_minus_ones:
         df = df.loc[df['total_clearence_in_between_visits'] != -1]

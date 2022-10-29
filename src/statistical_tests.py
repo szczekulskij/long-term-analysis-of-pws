@@ -228,7 +228,7 @@ def bucket_anova_n_plot(
 
     # Move it to func
 
-    p_values[2] = 'n.s.'
+    # p_values[2] = 'n.s.'
     plt.figure(figsize=(20,10))
     index = 1
     x_ticks = []
@@ -274,8 +274,8 @@ def bucket_anova_n_plot(
     plt.xticks(x_ticks, buckets)
     # plt.xlabel('number of laser sessions (clustered into buckets)', fontsize=17)
     # plt.ylabel('% mean improvement\n(total clearance)\n', fontsize=19)
-    plt.xlabel("% mean absolute GCE ", size = 30)
-    plt.ylabel("number of laser sessions (bucketed)", size = 30)
+    plt.ylabel("% mean improvement (total clearence) ", size = 30)
+    plt.xlabel("number of laser sessions (clustered into buckets)", size = 30)
     ax = plt.gca()
 
 
