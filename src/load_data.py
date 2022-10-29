@@ -1,3 +1,4 @@
+from turtle import clear
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -42,9 +43,12 @@ def get_data(format_type, remove_minus_ones = True):
 
     '''
     try : 
-        df = pd.read_csv('data.csv') 
+        df = pd.read_excel('updated_info.xlsx', sheet_name="wszystkie dane poprawione") 
     except : 
-        raise Exception('Data reading went wrong! Fix it !')
+        try :
+            df = pd.read_excel('src/updated_info.xlsx', sheet_name="wszystkie dane poprawione") 
+        except:
+            raise Exception('Data reading went wrong! Fix it !')
 
 
     # Fill in data to have surnames in each row
@@ -121,3 +125,7 @@ def get_summed_time_column(df):
         summed_time.append(current_summed_time)
     df['summed_time'] = summed_time
     return df
+
+if __name__ == "__main__":
+    df = get_data('all', remove_minus_ones = False)
+    print(df)
