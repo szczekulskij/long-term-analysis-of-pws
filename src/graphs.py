@@ -25,7 +25,5 @@ def graph_agg_metric_over_nr_sessions(metric, agg_type = "mean", cut_last_x_visi
     plt.axvline(x=2, color='b', linestyle='--')
     plt.axvline(x=5, color='b', linestyle='--')
     plt.axvline(x=9, color='darkorange', linestyle='-',  lw = 9)
-
-    ## NeW
     plt.xlabel("number of laser sessions", size = 30)
     plt.ylabel("mean improvement (total clearence)", size = 30)
