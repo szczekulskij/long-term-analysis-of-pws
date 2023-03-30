@@ -1,4 +1,8 @@
 import pandas as pd
+INBETWEEN_METRICS = ['inbetween_GCE', 'inbetween_area_change','inbetween_clearence_effect']
+TOTAL_METRICS = ['total_GCE', 'total_area_change', 'total_clearence_effect']
+ALL_METRICS = INBETWEEN_METRICS + TOTAL_METRICS
+
 
 def format_df(df):
     df.rename(columns = {
@@ -44,22 +48,25 @@ def filter_df(df):
     df = df.loc[~df.visit_nr.isin(["niebyłozabiegu", "brakzabiegu"])]
     return df
 
-def get_data_df(type = "total"):
+def get_data_df(metric_type = None, metric = None):
     df = pd.read_excel('/Users/szczekulskij/side_projects/long-term-analysis-of-pws/data/final_version.xlsx', sheet_name="wszystkie dane poprawione") 
     df = format_df(df) # rename columns, drop columns, reorder df
     df = filter_df(df)
     df = fill_surnames(df) # fill in surnames info
-    if type == "total":
+    if metric_type == "total" or metric in TOTAL_METRICS :
         df.drop(columns = ["inbetween_GCE", "inbetween_area_change", "inbetween_clearence_effect"], inplace = True)
-    elif type == "inbetween":
+    elif metric_type == "inbetween" or metric in INBETWEEN_METRICS :
         df.drop(columns = ["total_GCE", "total_area_change", "total_clearence_effect"], inplace = True)
     else : 
-        raise Exception(f"Wrong type passed in!. Type was : {type}. But has to be either 'total' or 'inbetween'")
+        if metric not in ALL_METRICS:
+            raise Exception("Wrong metric/metric_type passed in")
     for column in df.columns:
         df = df.loc[df[column] != "brak"]
     return df
 
 
 if __name__ == "__main__":
-    df = get_data_df("inbetween")
-    print(df.head(50))
+    df = get_data_df(metric_type = "inbetween")
+    print(df.head(5))
+    df = get_data_df(metric = "total_GCE")
+    print(df.head(5))
