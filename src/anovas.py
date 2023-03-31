@@ -12,7 +12,8 @@ def bucketed_anova(
     metric = "total_GCE",
     buckets = [1,3,6,10,15,],
     ttest_type = None,
-    p_value_text_height = None
+    p_value_text_height = None,
+    last_bucket_label = None
 ):
     if ttest_type not in ["greater", "less"] : raise Exception("Wrong ttest_type!")
     df = get_data_df(metric = metric)
@@ -22,10 +23,8 @@ def bucketed_anova(
         bucket_min = buckets[i]
         bucket_max = buckets[i+1]
         bucket_range = f"{bucket_min} - {bucket_max - 1}"
-        # Extra special case handle line:
-        if bucket_max == 100:
-            bucket_range = f"{bucket_min} +"
-
+        if i == len(buckets) - 2 and last_bucket_label:
+            bucket_range = last_bucket_label
         visits_data = list(df.loc[(df[bucket_column] >= bucket_min) & (df[bucket_column] < bucket_max)][metric])
         data_dict[bucket_range] = visits_data
         data_2d_arr.append(visits_data)
@@ -64,7 +63,7 @@ def bucketed_anova(
     # Format p-values (either to 0 or non-significant)
     new_p_values = []
     for p_value in p_values:
-        if p_value > 0.1:
+        if p_value > 0.2:
             p_value = "n.s."
         elif p_value <0.001:
             p_value = 0
