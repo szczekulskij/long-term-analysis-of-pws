@@ -7,7 +7,7 @@ from statistics import mean as get_mean
 from scipy.stats import ttest_rel as ttest_related
 from scipy.stats import ttest_ind as ttest_not_related
 
-def bucket_anova_n_plot(
+def bucketed_anova(
     bucket_column = "visit_nr",
     metric = "total_GCE",
     buckets = [1,3,6,10,15,],
