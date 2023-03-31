@@ -11,8 +11,10 @@ def bucketed_anova(
     bucket_column = "visit_nr",
     metric = "total_GCE",
     buckets = [1,3,6,10,15,],
+    ttest_type = None,
+    p_value_text_height = None
 ):
-
+    if ttest_type not in ["greater", "less"] : raise Exception("Wrong ttest_type!")
     df = get_data_df(metric = metric)
     data_dict = {}
     data_2d_arr = []
@@ -48,7 +50,7 @@ def bucketed_anova(
             continue
         left_mean = round(get_mean(prev_data),2)
         right_mean = round(get_mean(data),2)
-        _, p_value = ttest_not_related(prev_data, data, alternative= 'less')
+        _, p_value = ttest_not_related(prev_data, data, alternative = ttest_type)
         p_value = round(p_value,5)
         print(f'statistics between {prev_bucket_range} bucket and {bucket_range} bucket')
         print(f'means: {left_mean} vs {right_mean}')
@@ -122,11 +124,10 @@ def bucketed_anova(
         labels_places.append(label_place)
 
     for label, p_value  in zip(labels_places, p_values):
-        height = 54.50
         if p_value == 'n.s.':
             text = f"p-value: {p_value}"
         else : 
             text = f"p-value: {float(p_value)}"
-        ax.text(label, height, text, ha="center", va="bottom", size = 18)
+        ax.text(label, p_value_text_height, text, ha="center", va="bottom", size = 18)
     for label in (ax.get_xticklabels() + ax.get_yticklabels()):
         label.set_fontsize(14.5)
