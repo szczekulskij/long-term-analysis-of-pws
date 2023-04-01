@@ -1,9 +1,117 @@
-<mxfile host="app.diagrams.net" modified="2023-04-01T19:06:10.000Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="uPRugW1SAsntsvFDXaBj" version="21.1.1" type="device">
-  <diagram name="Page-1" id="ZjkvppzUxBKVKpnqnAgq">
-    <mxGraphModel dx="954" dy="648" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+<mxfile host="app.diagrams.net" modified="2023-04-01T19:49:26.958Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36" etag="YRq6hHtus2szj06lCCOa" version="21.1.1" type="device" pages="2">
+  <diagram name="Figure 5" id="ZjkvppzUxBKVKpnqnAgq">
+    <mxGraphModel dx="1004" dy="622" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-1" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="110" width="500" height="340" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-2" value="Patient 1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="240" y="140" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-3" value="Patient 2" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="240" y="230" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-4" value="Patient 3" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="240" y="320" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-5" value="patient 1&lt;br&gt;photo" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="310" y="120" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-6" value="patient 2&lt;br&gt;photo" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="310" y="205" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-7" value="patient 3&lt;br&gt;photo" style="whiteSpace=wrap;html=1;aspect=fixed;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="310" y="295" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-8" value="total GCE graph of patient 1" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="120" width="280" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-9" value="total GCE graph of patient 2" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="205" width="280" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-10" value="total GCE graph of patient 3" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="295" width="280" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-13" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=5;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="410" y="410" as="sourcePoint" />
+            <mxPoint x="700" y="410" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-15" value="x-axis&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;before treatment -&amp;gt; post induction treatment -&amp;gt; after 4+ years break -&amp;gt; after two visits&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="410" y="390" width="290" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-17" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="450" width="500" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-18" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="220" y="540" width="500" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-19" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Fig5A&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="220" y="110" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-20" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Fig5B&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="220" y="450" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-21" value="&lt;font style=&quot;font-size: 18px;&quot;&gt;Fig5C&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="220" y="540" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-22" value="mean total GCE of all 3 patients" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="455" width="420" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-23" value="mean inbetween GCE of all 3 patients" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="545" width="420" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-24" value="x-axis&lt;br&gt;&lt;br&gt;&lt;font style=&quot;font-size: 12px;&quot;&gt;before treatment -&amp;gt; post induction treatment -&amp;gt; after 4+ years break -&amp;gt; after two visits&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="330" y="640" width="290" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="sDfccdp5icHR1nR3lJ-Y-26" value="" style="endArrow=none;html=1;rounded=0;strokeWidth=5;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="260" y="660" as="sourcePoint" />
+            <mxPoint x="710" y="660" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="kapHgl10xFXuh0EfkYmn" name="Figure 6">
+    <mxGraphModel dx="1122" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="4OifexJJ9TKlhhsSFENy-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4OifexJJ9TKlhhsSFENy-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="750" y="300" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4OifexJJ9TKlhhsSFENy-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="4OifexJJ9TKlhhsSFENy-1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="405" y="480" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="4OifexJJ9TKlhhsSFENy-1" value="Induction treatment&lt;br&gt;(up to around 9 visits where plateu is reached)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="250" y="250" width="310" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="4OifexJJ9TKlhhsSFENy-3" value="Maintainence treatment&lt;br&gt;(reccommended twice a year)" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="750" y="250" width="310" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="4OifexJJ9TKlhhsSFENy-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="4OifexJJ9TKlhhsSFENy-5" target="4OifexJJ9TKlhhsSFENy-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="4OifexJJ9TKlhhsSFENy-5" value="1-3 recovery sessions with a short 4-8 week&lt;span style=&quot;font-size: medium; text-align: start;&quot;&gt;&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="480" width="310" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="4OifexJJ9TKlhhsSFENy-6" value="If there was no break between treatements" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="590" y="260" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="4OifexJJ9TKlhhsSFENy-8" value="If there was a longer break like 2+ years" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="410" y="390" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="eE8OkqhmB2f7yDdIAq-t-1" value="&lt;font style=&quot;font-size: 19px;&quot;&gt;Fig6&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="250" y="130" width="60" height="30" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
