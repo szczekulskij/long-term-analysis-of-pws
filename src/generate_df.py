@@ -51,8 +51,8 @@ def filter_df(df):
 def get_data_df(metric_type = None, metric = None):
     df = pd.read_excel('/Users/szczekulskij/side_projects/long-term-analysis-of-pws/data/final_version.xlsx', sheet_name="wszystkie dane poprawione") 
     df = format_df(df) # rename columns, drop columns, reorder df
-    df = filter_df(df)
     df = fill_surnames(df) # fill in surnames info
+    df = filter_df(df)
     if metric_type == "total" or metric in TOTAL_METRICS :
         df.drop(columns = ["inbetween_GCE", "inbetween_area_change", "inbetween_clearence_effect"], inplace = True)
     elif metric_type == "inbetween" or metric in INBETWEEN_METRICS :

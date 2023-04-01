@@ -20,7 +20,7 @@ def graph_agg_metric_over_nr_sessions(metric, agg_type = "mean", cut_last_x_visi
     aggregated_column = [0] + list(grouped_by_visit[metric])
     
     # Plot
-    plt.figure(figsize=(20,10))
+    # plt.figure(figsize=(20,10))
     plt.plot(visits, aggregated_column, label = "o", linewidth = LINEWIDTH)
     ax = plt.gca()
     for label in (ax.get_xticklabels() + ax.get_yticklabels()):
@@ -49,7 +49,7 @@ def graph_based_on_time_bucket(metric, agg_type = "mean", buckets_nr = 4, increm
 
     # Calculate nr of patients per bucket
     grouped_by_bucket = df.groupby("bucket", as_index = False)
-    patients_per_bucket = grouped_by_bucket[metric].count()
-    patients_per_bucket.rename(columns = {metric : f'patients_per_bucket'}, inplace = True)
-    patients_per_bucket["bucket"] = ticks_labels
-    display(patients_per_bucket)
+    visits_per_bucket = grouped_by_bucket[metric].count()
+    visits_per_bucket.rename(columns = {metric : 'visits_per_bucket'}, inplace = True)
+    visits_per_bucket["bucket"] = ticks_labels
+    display(visits_per_bucket)

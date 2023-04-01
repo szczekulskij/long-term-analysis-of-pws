@@ -41,14 +41,14 @@ def bucketed_anova(
     prev_bucket_range = ''
     bucket_ranges = []
     for bucket_range, data in data_dict.items():
-        means.append(round(get_mean(data),2))
+        means.append(round(get_mean(data),5))
         bucket_ranges.append(bucket_range)
         if prev_data == '' :
             prev_data = data
             prev_bucket_range = bucket_range
             continue
-        left_mean = round(get_mean(prev_data),2)
-        right_mean = round(get_mean(data),2)
+        left_mean = round(get_mean(prev_data),5)
+        right_mean = round(get_mean(data),5)
         _, p_value = ttest_not_related(prev_data, data, alternative = ttest_type)
         p_value = round(p_value,5)
         print(f'statistics between {prev_bucket_range} bucket and {bucket_range} bucket')
@@ -61,14 +61,14 @@ def bucketed_anova(
 
 
     # Format p-values (either to 0 or non-significant)
-    new_p_values = []
-    for p_value in p_values:
-        if p_value > 0.2:
-            p_value = "n.s."
-        elif p_value <0.001:
-            p_value = 0
-        new_p_values.append(p_value)
-    p_values = new_p_values
+    # new_p_values = []
+    # for p_value in p_values:
+    #     if p_value > 0.2:
+    #         p_value = "n.s."
+    #     elif p_value <0.001:
+    #         p_value = 0
+    #     new_p_values.append(p_value)
+    # p_values = new_p_values
     
 
 
