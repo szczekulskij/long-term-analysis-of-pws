@@ -5,6 +5,7 @@ import sys
 sys.path.insert(0, '/Users/szczekulskij/side_projects/long-term-analysis-of-pws')
 from src.generate_df import get_data_df
 from src.utils import add_bucketed_time_column_to_df
+from statistics import mean
 
 
 LINEWIDTH = 5
@@ -53,3 +54,54 @@ def graph_based_on_time_bucket(metric, agg_type = "mean", buckets_nr = 4, increm
     visits_per_bucket.rename(columns = {metric : 'visits_per_bucket'}, inplace = True)
     visits_per_bucket["bucket"] = ticks_labels
     display(visits_per_bucket)
+
+
+
+## Figure 6 graphs:
+SURNAMES = ["17.Górszczak", "13.Zborowski", "35.Twardzik"]
+DATA = {
+    # It's all in total's GCE
+    "13.Zborowski" : {
+        "max" : 77.37903,
+        "break_time" : 1867,
+        "after_break" : 57.2239,
+        "after_2_visits" : 81.18361
+    },
+    
+    "17.Górszczak" : {
+        "max" : 76.61975,
+        "break_time" : 1647,
+        "after_break" : 31.79399,
+        "after_2_visits" : 69.8795
+    },
+    
+    "35.Twardzik" : {
+        "max" : 84.65033,
+        "break_time" : 1860,
+        "after_break" : 51,
+        "after_2_visits" : 74 
+    }
+}
+
+def plot_fig6A_graph():
+    max_GCE = []
+    break_time = []
+    after_break_GCE = []
+    after_2_visits_GCE = []
+    for surname, patients_data in DATA.items():
+        max_GCE.append(patients_data["max"])
+        break_time.append(patients_data["break_time"])
+        after_break_GCE.append(patients_data["after_break"])
+        after_2_visits_GCE.append(patients_data["after_2_visits"])
+
+    means = [
+        0,
+        mean(max_GCE),
+        mean(after_break_GCE),
+        mean(after_2_visits_GCE)
+    ]
+    y_labels = ["before treatment", "after treatment", "after break", "after 2 extra sessions"]
+    plt.plot(y_labels, means, linewidth = LINEWIDTH)
+    ax = plt.gca()
+    for label in (ax.get_xticklabels() + ax.get_yticklabels()):
+        label.set_fontsize(21)
