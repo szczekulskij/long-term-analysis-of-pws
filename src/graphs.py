@@ -82,17 +82,40 @@ DATA = {
         "after_2_visits" : 74 
     }
 }
+def plot_fig5A_graphs():
+    y_labels = ["before treatment", "after treatment", "after break", "after 2 extra sessions"]
+    fig, axs = plt.subplots(3, sharex=True, sharey=True)
+    fig.supylabel("% improvement (GCE)", size = 30)
+    fig.set_size_inches(20,10)
 
-def plot_fig6A_graph():
+    i = 0 
+    for surname, patients_data in DATA.items():
+        max = patients_data["max"]
+        # break_time = patients_data["break_time"])
+        after_break = patients_data["after_break"]
+        after_2_visits = patients_data["after_2_visits"]
+        data = [0, max, after_break, after_2_visits]
+
+        axs[i].plot(y_labels, data, linewidth = LINEWIDTH)
+        for label in (axs[i].get_xticklabels() + axs[i].get_yticklabels()):
+            label.set_fontsize(21)
+        i+=1
+
+
+def plot_fig5B_graph():
     max_GCE = []
     break_time = []
     after_break_GCE = []
     after_2_visits_GCE = []
+    relative_GCE_improvement_list = []
     for surname, patients_data in DATA.items():
         max_GCE.append(patients_data["max"])
         break_time.append(patients_data["break_time"])
         after_break_GCE.append(patients_data["after_break"])
         after_2_visits_GCE.append(patients_data["after_2_visits"])
+
+        relative_GCE_improvement = patients_data["after_2_visits"] / patients_data["after_break"] * 100
+        relative_GCE_improvement_list.append(relative_GCE_improvement)
 
     means = [
         0,
@@ -105,3 +128,11 @@ def plot_fig6A_graph():
     ax = plt.gca()
     for label in (ax.get_xticklabels() + ax.get_yticklabels()):
         label.set_fontsize(21)
+
+
+    # Get other statistics
+    print("% mean improvement (GCE) before treatment: ", 0)
+    print("% mean improvement (GCE) after treatment: ", round(mean(max_GCE),2))
+    print("% mean improvement (GCE) after break: ", round(mean(after_break_GCE),2))
+    print("% mean improvement (GCE) after 2 extra visits: ",  round(mean(after_2_visits_GCE),2))
+    print("% mean relative improvement (GCE) after 2 extra visits: ",  round(mean(relative_GCE_improvement_list),2))
