@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import sys  
-sys.path.insert(0, '/Users/szczekulskij/side_projects/long-term-analysis-of-pws')
+sys.path.insert(0, '/Users/szczekulskij/side_projects/research_projects/long-term-analysis-of-pws')
 from src.generate_df import get_data_df
 from src.utils import add_bucketed_time_column_to_df
 from statistics import mean

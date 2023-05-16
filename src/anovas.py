@@ -1,11 +1,17 @@
 import matplotlib.pyplot as plt
+import pandas as pd
 import sys  
-sys.path.insert(0, '/Users/szczekulskij/side_projects/long-term-analysis-of-pws')
+sys.path.insert(0, '/Users/szczekulskij/side_projects/research_projects/long-term-analysis-of-pws')
 from src.generate_df import get_data_df
-import scipy.stats as stats
+from scipy.stats import f_oneway
 from statistics import mean as get_mean
 from scipy.stats import ttest_rel as ttest_related
 from scipy.stats import ttest_ind as ttest_not_related
+# from scipy.stats import interval as confidence_interval
+from scipy import stats
+import statsmodels.stats.api as sms
+
+
 
 def bucketed_anova(
     bucket_column = "visit_nr",
@@ -29,7 +35,7 @@ def bucketed_anova(
         data_dict[bucket_range] = visits_data
         data_2d_arr.append(visits_data)
 
-    _, p_value = stats.f_oneway(*data_2d_arr)
+    _, p_value = f_oneway(*data_2d_arr)
     print('\n\n\n')
     print('anova results:')
     print(f'buckets: {buckets}')
@@ -52,9 +58,9 @@ def bucketed_anova(
         _, p_value = ttest_not_related(prev_data, data, alternative = ttest_type)
         p_value = round(p_value,5)
         print(f'statistics between {prev_bucket_range} bucket and {bucket_range} bucket')
-        print(f'means: {left_mean} vs {right_mean}')
-        print(f"p-value: {p_value}\n")
-        p_values.append(p_value)
+        print(f'means: {round(left_mean,2)} vs {round(right_mean,2)}')
+        print(f"p-value: {round(p_value,3)}\n")
+        p_values.append(round(p_value,3))
 
         prev_data = data
         prev_bucket_range = bucket_range
@@ -130,3 +136,21 @@ def bucketed_anova(
         ax.text(label, p_value_text_height, text, ha="center", va="bottom", size = 18)
     for label in (ax.get_xticklabels() + ax.get_yticklabels()):
         label.set_fontsize(14.5)
+
+
+
+    ## Add extra place to generate the CI df
+    CI_data = []
+    for index in range(len(data_2d_arr)-1):
+        left_lift = data_2d_arr[index]
+        right_list = data_2d_arr[index+1]
+        cm = sms.CompareMeans(sms.DescrStatsW(left_lift), sms.DescrStatsW(right_list))
+        a, b = cm.tconfint_diff(alpha=0.05, alternative='two-sided', usevar='unequal')
+        a,b = round(a,2), round(b,2)
+        CI_data.append((a,b))
+
+    ## Lil transformation of CI_data
+    print(CI_data)
+    
+
+

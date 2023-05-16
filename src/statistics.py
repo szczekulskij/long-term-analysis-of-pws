@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import sys  
-sys.path.insert(0, '/Users/szczekulskij/side_projects/long-term-analysis-of-pws')
+sys.path.insert(0, '/Users/szczekulskij/side_projects/research_projects/long-term-analysis-of-pws')
 from src.generate_df import get_data_df
 
 

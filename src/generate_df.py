@@ -49,7 +49,7 @@ def filter_df(df):
     return df
 
 def get_data_df(metric_type = None, metric = None):
-    df = pd.read_excel('/Users/szczekulskij/side_projects/long-term-analysis-of-pws/data/final_version.xlsx', sheet_name="wszystkie dane poprawione") 
+    df = pd.read_excel('/Users/szczekulskij/side_projects/research_projects/long-term-analysis-of-pws/data/final_version.xlsx', sheet_name="wszystkie dane poprawione") 
     df = format_df(df) # rename columns, drop columns, reorder df
     df = fill_surnames(df) # fill in surnames info
     df = filter_df(df)
